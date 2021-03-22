@@ -11,14 +11,24 @@ const Button = ({ handleAction, text }) => {
 }
 
 const StatisticLine = (props) => {
+  if (props.text === 'Positive') {
+    return (
+      <tr>
+        <td>{props.text}</td>
+        <td>{props.value} %</td>
+      </tr>
+    )
+  }
+  
   return (
-    <> {props.text} {props.value} <br /> </> 
+    <tr><td>{props.text}</td><td>{props.value}</td></tr>
   )
 }
 
 const Statistics = (props) => {
   const totalFeedback = props.good + props.neutral + props.bad
   const average = (props.good - props.bad) / totalFeedback
+  const positivePercent = props.good / totalFeedback * 100
 
   if (totalFeedback === 0) {
     return (
@@ -29,13 +39,16 @@ const Statistics = (props) => {
   }
 
   return (
-    <p>
-      <StatisticLine text='Good' value={props.good} />
-      <StatisticLine text='Neutral' value={props.neutral} />
-      <StatisticLine text='Bad' value={props.bad} />
-      <StatisticLine text='Total feedback' value={totalFeedback} />
-      <StatisticLine text='Average' value={average} />
-    </p>
+    <table>
+      <tbody>
+        <StatisticLine text='Good' value={props.good}/>
+        <StatisticLine text='Neutral' value={props.neutral}/>
+        <StatisticLine text='Bad' value={props.bad} />
+        <StatisticLine text='Total feedback' value={totalFeedback} />
+        <StatisticLine text='Average' value={average} />
+        <StatisticLine text='Positive' value={positivePercent} />
+      </tbody>
+    </table>
   )
 }
 
