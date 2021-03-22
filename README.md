@@ -1,3 +1,4 @@
 # FullStack 2021 MOOC
 
-here we go
+Part 0 - OK
+Part 1 - wip

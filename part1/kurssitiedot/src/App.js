@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 
 const Header = (props) => {
   return (
@@ -33,32 +33,48 @@ const Total = (props) => {
   )
 }
 
-const App = () => {
-  const course = {
-    name: 'Half Stack application development',
-    parts: [
-      {
-        name: 'Fundamentals of React',
-        exercises: 10
-      },
-      {
-        name: 'Using props to pass data',
-        exercises: 7
-      },
-      {
-        name: 'State of a component',
-        exercises: 14
-      }
-    ]
-  }
+const Hello = (props) => {
+  const name = props.name
+  const age = props.age
+
+  const bornYear = () => new Date().getFullYear - age
 
   return (
     <div>
-      <Header course={course.name} />
-      <Content parts={course.parts} />
-      <Total parts={course.parts} />
+      <p>
+        Hello {name}, you are {age} years old
+      </p>
+      <p>So you were probably born {bornYear()}</p>
     </div>
   )
+}
+
+const App = () => {
+    const course = {
+      name: 'Half Stack application development',
+      parts: [
+        {
+          name: 'Fundamentals of React',
+          exercises: 10
+        },
+        {
+          name: 'Using props to pass data',
+          exercises: 7
+        },
+        {
+          name: 'State of a component',
+          exercises: 14
+        }
+      ]
+    }
+  
+    return (
+      <div>
+        <Header course={course.name} />
+        <Content parts={course.parts} />
+        <Total parts={course.parts} />
+      </div>
+    )
 }
 
 export default App;
