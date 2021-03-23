@@ -37,11 +37,6 @@ function App() {
     'Premature optimization is the root of all evil.',
     'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
   ]
-
-  function randomize() {
-    return Math.floor(Math.random() * anecdotes.length)
-  }
-
   const random = Math.floor(Math.random() * anecdotes.length)
   const points = [0, 0, 0, 0, 0, 0]
   const copy = [...points]
