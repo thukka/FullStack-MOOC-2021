@@ -2,6 +2,31 @@ import React, { useState } from 'react'
 
 const Button = (props) => <button onClick={props.handleClick}>{props.text}</button>
 
+const Votes = (props) => <p>has {props.votes} votes</p>
+
+const MostVotes = (props) => {
+  const anecdotes = props.anecdotes
+  const votes = props.votes
+  
+  let mostVoted = 0;
+  let index = 0;
+
+  for (let i = 0; i < anecdotes.length; i++) {
+    if (mostVoted < votes[i]) {
+      mostVoted = votes[i]
+      index = i
+    } 
+  }
+
+  return (
+    <>
+    <h3>Anecdote with most votes</h3>
+    <p> {anecdotes[index]} <br />
+    has {mostVoted} votes
+    </p>
+    </>
+  )
+}
 
 function App() {
   const anecdotes = [
@@ -13,15 +38,32 @@ function App() {
     'Debugging is twice as hard as writing the code in the first place. Therefore, if you write the code as cleverly as possible, you are, by definition, not smart enough to debug it.'
   ]
 
+  function randomize() {
+    return Math.floor(Math.random() * anecdotes.length)
+  }
+
   const random = Math.floor(Math.random() * anecdotes.length)
+  const points = [0, 0, 0, 0, 0, 0]
+  const copy = [...points]
+
   const [selected, setSelected] = useState(random)
-  
-  console.log(random)
+  const [votes, setVotes] = useState([...copy])
+
+  function editNode(selected) {
+    const copy = [...votes]
+    copy[selected] = copy[selected] + 1
+    setVotes(copy)
+  }
+
 
   return (
     <div>
-      <h3>{anecdotes[selected]}</h3> <br />
-      <Button handleClick={ () => setSelected(Math.floor(Math.random() * anecdotes.length)) } text='next anecdote' />
+      <h3> Anecdote of the day </h3>
+      {anecdotes[selected]}
+      <Votes votes={votes[selected]} />
+      <Button handleClick={() => editNode(selected)} text='vote' />
+      <Button handleClick={() => setSelected(Math.floor(Math.random() * anecdotes.length))} text='next anecdote' />
+      <MostVotes anecdotes={anecdotes} votes={votes} />
     </div>
   )
 }
