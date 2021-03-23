@@ -44,10 +44,18 @@ function App() {
   const [selected, setSelected] = useState(random)
   const [votes, setVotes] = useState([...copy])
 
-  function editNode(selected) {
+  const editNode = (selected) => {
     const copy = [...votes]
     copy[selected] = copy[selected] + 1
     setVotes(copy)
+  }
+
+  const randomize = () => {
+    let random = Math.floor(Math.random() * anecdotes.length)
+    while (random === selected) {
+      random = Math.floor(Math.random() * anecdotes.length)
+    }
+    return random
   }
 
 
@@ -57,7 +65,7 @@ function App() {
       {anecdotes[selected]}
       <Votes votes={votes[selected]} />
       <Button handleClick={() => editNode(selected)} text='vote' />
-      <Button handleClick={() => setSelected(Math.floor(Math.random() * anecdotes.length))} text='next anecdote' />
+      <Button handleClick={() => setSelected(randomize)} text='next anecdote' />
       <MostVotes anecdotes={anecdotes} votes={votes} />
     </div>
   )
