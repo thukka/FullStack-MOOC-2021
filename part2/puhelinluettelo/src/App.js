@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import GetNames from './components/GetNames'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
+import axios from 'axios'
 
 
 const App = () => {
@@ -16,6 +17,11 @@ const App = () => {
   const inputHandle = (event) => setNewName(event.target.value)
   const inputHandlePhone = (event) => setNewNumber(event.target.value)
   const inputHandleFilter = (event) => setFilterName(event.target.value)
+
+  useEffect(() => {
+    axios.get('http://localhost:3001/persons')
+    .then(response => setPersons(response.data))
+  }, [])
 
   const checkForDoubles = (newName) => {
     let matchFound = false
