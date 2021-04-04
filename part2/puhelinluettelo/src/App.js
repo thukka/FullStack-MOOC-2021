@@ -2,14 +2,11 @@ import React, { useState, useEffect } from 'react'
 import GetNames from './components/GetNames'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
-import axios from 'axios'
+import personsService from './services/persons'
 
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: '050123456' },
-    { name: 'Toni Hukka', number: '123456' },
-  ])
+  const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filterName, setFilterName] = useState('')
@@ -19,8 +16,8 @@ const App = () => {
   const inputHandleFilter = (event) => setFilterName(event.target.value)
 
   useEffect(() => {
-    axios.get('http://localhost:3001/persons')
-    .then(response => setPersons(response.data))
+    personsService.getAll()
+      .then(allPersons => setPersons(allPersons))
   }, [])
 
   const checkForDoubles = (newName) => {
@@ -43,9 +40,20 @@ const App = () => {
         name: newName,
         number: newNumber,
       }
-      setPersons(persons.concat(getNewName))
-      setNewName('')
+      personsService
+        .create(getNewName)
+        .then(newPerson => {
+          setPersons(persons.concat(newPerson))
+          setNewName('')
+          setNewNumber('')
+        }
+        )
     }
+  }
+
+  const RemoveContact = (id) => {
+    console.log('hello', id)
+    return personsService.removeUser(id)
   }
 
   return (
@@ -62,7 +70,7 @@ const App = () => {
       />
       <h2>Numbers</h2>
       <div>
-        <GetNames persons={persons} filterName={filterName} />
+        <GetNames persons={persons} filterName={filterName} RemoveContact={RemoveContact} />
       </div>
     </div>
   );
