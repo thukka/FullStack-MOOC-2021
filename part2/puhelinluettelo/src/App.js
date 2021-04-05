@@ -34,7 +34,14 @@ const App = () => {
     event.preventDefault()
 
     if (checkForDoubles(newName)) {
-      alert(`${newName} is already on the list`)
+      if (window.confirm(`${newName} is already on the list, replace the old number with a new one?`)) {
+        const user = persons.find(n => n.name === newName)
+        const changedUser = { ...user, number: newNumber }
+        personsService.updateInfo(changedUser.id, changedUser)
+          .then(changedInfo => {
+            setPersons(persons.map(person => person.id !== changedUser.id ? person : changedInfo))
+          })
+      }
     } else {
       const getNewName = {
         name: newName,
@@ -51,9 +58,13 @@ const App = () => {
     }
   }
 
-  const RemoveContact = (id) => {
-    console.log('hello', id)
-    return personsService.removeUser(id)
+  const RemoveContact = (id, name) => {
+    if (window.confirm(`Do you really want to delete ${name}?`)) {
+      personsService.removeUser(id)
+        .then(personsService
+          .getAll()
+          .then(allPersons => setPersons(allPersons)))
+    }
   }
 
   return (

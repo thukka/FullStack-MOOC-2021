@@ -1,7 +1,7 @@
 import React from 'react'
 
 const Contact = ( props ) => {
-    return <>{props.name} {props.number} <button onClick={() => props.RemoveContact(props.personId)}>delete</button> <br /></>
+    return <>{props.name} {props.number} <button onClick={() => props.RemoveContact(props.personId, props.name)}>delete</button> <br /></>
 }
 
 const GetNames = ({ persons, filterName, RemoveContact }) => {

@@ -12,10 +12,15 @@ const create = (NewName) => {
     return request.then(response => response.data)
 }
 
-const removeUser = ( personId ) => {
-    console.log(`${baseUrl}/${personId}`)
-    // const request = axios.delete(`${baseUrl}/${personId}`)
-    
+const removeUser = (personId) => {
+    const request = axios.delete(`${baseUrl}/${personId}`)
+    return request.then(response => response.data)
 }
 
-export default { getAll, create, removeUser }
+const updateInfo = (personId, changedUser) => {
+    const request = axios.put(`${baseUrl}/${personId}`, changedUser)
+    return request.then(response => response.data)
+}
+
+/* eslint import/no-anonymous-default-export: [2, {"allowObject": true}] */
+export default { getAll, create, removeUser, updateInfo }
