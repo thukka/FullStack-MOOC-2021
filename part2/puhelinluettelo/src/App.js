@@ -2,14 +2,23 @@ import React, { useState, useEffect } from 'react'
 import GetNames from './components/GetNames'
 import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
+import Notification from './components/Notification'
 import personsService from './services/persons'
+import './index.css'
 
+const NullMessage = (setMessage, setIsError) =>
+  setTimeout(() => {
+    setMessage(null)
+    setIsError(false)
+  }, 5000)
 
 const App = () => {
   const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filterName, setFilterName] = useState('')
+  const [message, setMessage] = useState(null)
+  const [isError, setIsError] = useState(false)
 
   const inputHandle = (event) => setNewName(event.target.value)
   const inputHandlePhone = (event) => setNewNumber(event.target.value)
@@ -40,7 +49,15 @@ const App = () => {
         personsService.updateInfo(changedUser.id, changedUser)
           .then(changedInfo => {
             setPersons(persons.map(person => person.id !== changedUser.id ? person : changedInfo))
+            setMessage(`${newName} number updated`)
           })
+          .catch(error => {
+            setIsError(true)
+            setMessage(`Error with updating '${newName}', user might have been already deleted from the server`)
+            personsService.getAll().then(allPersons => setPersons(allPersons))
+          }
+          )
+        NullMessage(setMessage, setIsError)
       }
     } else {
       const getNewName = {
@@ -53,23 +70,32 @@ const App = () => {
           setPersons(persons.concat(newPerson))
           setNewName('')
           setNewNumber('')
+          setMessage(`${newPerson.name} added to the list`)
         }
         )
+      NullMessage(setMessage, setIsError)
     }
   }
 
   const RemoveContact = (id, name) => {
     if (window.confirm(`Do you really want to delete ${name}?`)) {
       personsService.removeUser(id)
-        .then(personsService
-          .getAll()
-          .then(allPersons => setPersons(allPersons)))
+        .then(setPersons(persons.filter(n => n.id !== id)))
+        .then(setMessage(`${name} was deleted`))
+        .catch(error => {
+          setIsError(true)
+          setMessage(`Error with updating '${name}', user might have been already deleted from the server`)
+          personsService.getAll().then(allPersons => setPersons(allPersons))
+        }
+        )
     }
+    NullMessage(setMessage, setIsError)
   }
 
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={message} isError={isError} />
       <Filter filterName={filterName} inputHandleFilter={inputHandleFilter} />
       <h2>add new</h2>
       <PersonForm
