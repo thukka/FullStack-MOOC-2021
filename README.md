@@ -6,4 +6,6 @@ Part 1 - OK
 
 Part 2 - OK
 
-Part 3 - wip
+Part 3 - OK
+
+Part 4 - WIP
