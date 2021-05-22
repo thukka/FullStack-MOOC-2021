@@ -72,7 +72,10 @@ const App = () => {
           setNewNumber('')
           setMessage(`${newPerson.name} added to the list`)
         }
-        )
+        ).catch(error => {
+          setIsError(true)
+          setMessage(`${error.response.data.error}`)
+        })
       NullMessage(setMessage, setIsError)
     }
   }
