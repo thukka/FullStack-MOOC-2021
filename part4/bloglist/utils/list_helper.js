@@ -1,4 +1,4 @@
-const dummy = (blogs) => {
+const dummy = () => {
     return 1;
 };
 
@@ -39,7 +39,7 @@ const mostBlogs = (blogs) => {
         'author': result.author,
         'blogs': totalBlogs
     };
-    console.log('result: ', resultAuthor);
+    //console.log('result: ', resultAuthor);
     return resultAuthor;
 };
 
