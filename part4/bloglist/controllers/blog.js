@@ -9,8 +9,12 @@ blogRouter.get('/', (request, response) => {
         });
 });
 
-blogRouter.post('/', (request, response) => {
+blogRouter.post('/', (request, response, next) => {
     const blog = new Blog(request.body);
+/*     if (blog.title === undefined || blog.url === undefined) {
+        response.status(400);
+    }
+ */
     if (blog.likes === undefined) {
         blog.likes = 0;
     }
@@ -19,7 +23,8 @@ blogRouter.post('/', (request, response) => {
         .save()
         .then(result => {
             response.status(201).json(result);
-        });
+        })
+        .catch(error => next(error));
 });
 
 module.exports = blogRouter;

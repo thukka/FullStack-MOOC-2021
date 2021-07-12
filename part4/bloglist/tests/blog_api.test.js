@@ -58,6 +58,23 @@ test('likes should be 0 if no value given', async () => {
     expect(latestBlogLikes).toEqual(0);
 });
 
+test('bad request if no title or author', async () => {
+    const blogWithoutAuthor = {
+        'title': 'bad request testing',
+        'url': 'http://www.badrequesthopefully.fi',
+        'likes': 5
+    };
+
+    const blogWithoutTitle = {
+        'author': 'mr. bad request',
+        'url': 'http://www.brbr.fi',
+        'likes': 5
+    };
+
+    await api.post('/api/blogs').send(blogWithoutAuthor).expect(400);
+    await api.post('/api/blogs').send(blogWithoutTitle).expect(400);
+});
+
 afterAll(() => {
     mongoose.connection.close();
 });
