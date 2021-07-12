@@ -35,12 +35,27 @@ test('adding a new blog succesfully', async () => {
         .send(newBlog)
         .expect(201)
         .expect('Content-Type', /application\/json/);
-    
+
     const blogsAtEnd = await helper.blogsInDb();
     expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1);
 
     const contents = blogsAtEnd.map(b => b.author);
     expect(contents).toContain('Supertest Blog');
+});
+
+test('likes should be 0 if no value given', async () => {
+    const blogWithoutLikes =
+        { 'author': 'No Likes', 'title': 'Still no likes', 'url': 'http://www.nolikes.test' };
+
+    await api
+        .post('/api/blogs')
+        .send(blogWithoutLikes)
+        .expect(201)
+        .expect('Content-Type', /application\/json/);
+
+    const blogsAtEnd = await helper.blogsInDb();
+    const latestBlogLikes = blogsAtEnd[blogsAtEnd.length - 1].likes;
+    expect(latestBlogLikes).toEqual(0);
 });
 
 afterAll(() => {
