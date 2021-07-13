@@ -98,7 +98,23 @@ describe('deleting a blog', () => {
 
 describe('editing a blog', () => {
     test('single blog succesfully edited', async () => {
+        const blogsAtStart = await helper.blogsInDb();
+        const blogToEdit = blogsAtStart[0];
+        const editedInfo = {
+            'author': blogToEdit.author,
+            'likes': 999123,
+            'title': 'This has been edited',
+            'url': blogToEdit.url
+        };
 
+        await api
+            .put(`/api/blogs/${blogToEdit.id}`)
+            .send(editedInfo)
+            .expect(200);
+
+        const blogsAtEnd = await helper.blogsInDb();
+        const contents = blogsAtEnd.map(b => b.title);
+        expect(contents).toContain(editedInfo.title);
     });
 });
 
