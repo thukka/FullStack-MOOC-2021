@@ -96,6 +96,13 @@ describe('deleting a blog', () => {
     });
 });
 
+describe('editing a blog', () => {
+    test('single blog succesfully edited', async () => {
+
+    });
+});
+
+
 afterAll(() => {
     mongoose.connection.close();
 });
