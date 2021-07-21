@@ -118,6 +118,44 @@ describe('editing a blog', () => {
     });
 });
 
+// login / user tests
+
+describe('creating new users', () => {
+    test('error 400 if password is too short', async () => {
+        const usersAtStart = await helper.usersInDb();
+        const newUser = {
+            'username': 'pwshouldfail',
+            'name': 'This should fail',
+            'password': 'xx'
+        };
+
+        await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400);
+
+        const usersAtEnd = await helper.usersInDb();
+        expect(usersAtEnd).toHaveLength(usersAtStart.length);
+    });
+
+    test('error 400 if username is under 3 characters', async () => {
+        const usersAtStart = await helper.usersInDb();
+        const newUser = {
+            'username': 'ab',
+            'name': 'username test',
+            'password': 'usernametestpw'
+        };
+
+        await api
+            .post('/api/users')
+            .send(newUser)
+            .expect(400);
+
+        const usersAtEnd = await helper.usersInDb();
+        expect(usersAtEnd).toHaveLength(usersAtStart.length);
+    });
+});
+
 
 afterAll(() => {
     mongoose.connection.close();

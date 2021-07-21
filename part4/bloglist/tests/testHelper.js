@@ -1,4 +1,5 @@
 const Blog = require('../models/blogreview');
+const User = require('../models/user');
 
 const initialBlogs = [
     { 'author': 'Teppo Testaaja', 'likes': 321, 'title': 'Testaajan ruokanurkka', 'url': 'http://www.testzone.fi' },
@@ -11,4 +12,9 @@ const blogsInDb = async () => {
     return allBlogs.map(blog => blog.toJSON());
 };
 
-module.exports = { initialBlogs, blogsInDb };
+const usersInDb = async () => {
+    const allUsers = await User.find({});
+    return allUsers.map(u => u.toJSON());
+};
+
+module.exports = { initialBlogs, blogsInDb, usersInDb };
