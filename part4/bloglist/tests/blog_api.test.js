@@ -33,9 +33,13 @@ describe('new blogs added', () => {
         const newBlog =
             { 'author': 'Supertest Blog', 'likes': 777, 'title': 'Supertest Blogzone', 'url': 'http://www.testtest.test' };
 
+        const testUser = helper.testUser;
+        const getTestUserToken = await api.post('/api/login').send(testUser);
+
         await api
             .post('/api/blogs')
             .send(newBlog)
+            .set({ Authorization: 'Bearer ' + getTestUserToken.body.token })
             .expect(200)
             .expect('Content-Type', /application\/json/);
 
@@ -46,13 +50,28 @@ describe('new blogs added', () => {
         expect(contents).toContain('Supertest Blog');
     });
 
+    test('401 unauthorized if no token', async () => {
+        const testBlog = { 'author': 'Auth Test', 'likes': 123, 'title': 'Auth Testing 401 no token', 'url': 'http://www.testtest.test' };
+
+        await api
+            .post('/api/blogs')
+            .send(testBlog)
+            .set({ Authorization: null })
+            .expect(401);
+
+    });
+
     test('likes should be 0 if no value given', async () => {
         const blogWithoutLikes =
             { 'author': 'No Likes', 'title': 'Still no likes', 'url': 'http://www.nolikes.test' };
 
+        const testUser = helper.testUser;
+        const getTestUserToken = await api.post('/api/login').send(testUser);
+
         await api
             .post('/api/blogs')
             .send(blogWithoutLikes)
+            .set({ Authorization: 'Bearer ' + getTestUserToken.body.token })
             .expect(200)
             .expect('Content-Type', /application\/json/);
 
@@ -62,6 +81,9 @@ describe('new blogs added', () => {
     });
 
     test('bad request if no title or author', async () => {
+        const testUser = helper.testUser;
+        const getTestUserToken = await api.post('/api/login').send(testUser);
+
         const blogWithoutAuthor = {
             'title': 'bad request testing',
             'url': 'http://www.badrequesthopefully.fi',
@@ -74,22 +96,30 @@ describe('new blogs added', () => {
             'likes': 5
         };
 
-        await api.post('/api/blogs').send(blogWithoutAuthor).expect(400);
-        await api.post('/api/blogs').send(blogWithoutTitle).expect(400);
+        await api.post('/api/blogs').send(blogWithoutAuthor).set({ Authorization: 'Bearer ' + getTestUserToken.body.token }).expect(400);
+        await api.post('/api/blogs').send(blogWithoutTitle).set({ Authorization: 'Bearer ' + getTestUserToken.body.token }).expect(400);
     });
 });
 
 describe('deleting a blog', () => {
     test('blog deleted succesfully', async () => {
+        const testUser = helper.testUser;
+        const getTestUserToken = await api.post('/api/login').send(testUser);
+
+        const blogToDelete = await api
+            .post('/api/blogs')
+            .send({ 'author': 'deletetest', 'title': 'Testing delete', 'url': 'test.fi' })
+            .set({ Authorization: 'Bearer ' + getTestUserToken.body.token });
+
         const blogsAtStart = await helper.blogsInDb();
-        const blogToDelete = blogsAtStart[0];
 
         await api
-            .delete(`/api/blogs/${blogToDelete.id}`)
+            .delete(`/api/blogs/${blogToDelete.body.id}`)
+            .set({ Authorization: 'Bearer ' + getTestUserToken.body.token })
             .expect(204);
 
         const blogsAtEnd = await helper.blogsInDb();
-        expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1);
+        expect(blogsAtEnd).toHaveLength(blogsAtStart.length - 1);
 
         const contents = blogsAtEnd.map(b => b.title);
         expect(contents).not.toContain(blogToDelete.title);

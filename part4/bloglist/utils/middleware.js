@@ -2,6 +2,7 @@ const logger = require('./logger');
 const morgan = require('morgan');
 const jwt = require('jsonwebtoken');
 
+
 const tokenExtractor = (request, response, next) => {
     const authorization = request.get('authorization');
     if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
@@ -17,7 +18,6 @@ const userExtractor = (request, response, next) => {
     if (!request.token || !decodedToken.id) {
         return response.status(401).json({ error: 'token missing or invalid' });
     }
-
     request.user = decodedToken.id;
     next();
 };
@@ -33,7 +33,11 @@ const errorHandler = (error, request, response, next) => {
     } else if (error.name === 'ValidationError') {
         return response.status(400).json({ error: error.message });
     } else if (error.name === 'JsonWebTokenError') {
-        return response.status(400).json({ error: 'invalid token ' });
+        if (request.token === null) {
+            return response.status(401).json({ error: 'unauthorized access' });
+        } else {
+            return response.status(400).json({ error: 'invalid token' });
+        }
     }
 
     logger.error(error.message);
