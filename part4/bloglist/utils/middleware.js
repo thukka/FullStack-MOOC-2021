@@ -1,5 +1,6 @@
 const logger = require('./logger');
 const morgan = require('morgan');
+const jwt = require('jsonwebtoken');
 
 const tokenExtractor = (request, response, next) => {
     const authorization = request.get('authorization');
@@ -8,6 +9,16 @@ const tokenExtractor = (request, response, next) => {
     } else {
         request.token = null;
     }
+    next();
+};
+
+const userExtractor = (request, response, next) => {
+    const decodedToken = jwt.verify(request.token, process.env.SECRET);
+    if (!request.token || !decodedToken.id) {
+        return response.status(401).json({ error: 'token missing or invalid' });
+    }
+
+    request.user = decodedToken.id;
     next();
 };
 
@@ -30,4 +41,4 @@ const errorHandler = (error, request, response, next) => {
 };
 
 
-module.exports = { morgan, unknownEndpoint, errorHandler, tokenExtractor };
+module.exports = { morgan, unknownEndpoint, errorHandler, tokenExtractor, userExtractor };
