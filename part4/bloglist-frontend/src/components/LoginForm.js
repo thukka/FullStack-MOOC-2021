@@ -2,7 +2,8 @@ import React from 'react'
 import loginService from '../services/login'
 import blogService from '../services/blogs'
 
-const LoginForm = ({ username, setUsername, password, setPassword, setUser }) => {
+const LoginForm = ({ username, setUsername, password, setPassword, setUser, setMessage, setIsError }) => {
+
     const handleLogin = async (event) => {
         event.preventDefault();
         try {
@@ -15,7 +16,12 @@ const LoginForm = ({ username, setUsername, password, setPassword, setUser }) =>
             setUsername('')
             setPassword('')
         } catch (exception) {
-            console.log('exception:', exception)
+            setIsError(true)
+            setMessage('Wrong username or password')
+            setTimeout(() => {
+                setMessage(null)
+                setIsError(false)
+            }, 5000)
         }
     }
 

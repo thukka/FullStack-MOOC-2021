@@ -1,14 +1,13 @@
 import React, { useState } from 'react'
 import blogService from '../services/blogs'
 
-const NewBlog = ({ blogs, setBlogs }) => {
+const NewBlog = ({ blogs, setBlogs, setMessage }) => {
     const [title, setTitle] = useState('')
     const [author, setAuthor] = useState('')
     const [url, setUrl] = useState('')
 
     const createBlog = (event) => {
         event.preventDefault()
-        console.log('BLOG CREATED')
         const newBlog = {
             'title': title,
             'author': author,
@@ -16,13 +15,15 @@ const NewBlog = ({ blogs, setBlogs }) => {
         }
         blogService.newBlog(newBlog)
             .then(returnedBlog => {
-                console.log('returned blog:', returnedBlog)
                 setBlogs(blogs.concat(returnedBlog))
             })
-        
-       setTitle('')
-       setAuthor('')
-       setUrl('')
+        setMessage(`a new blog ${newBlog.title} was added`)
+        setTimeout(() => {
+            setMessage(null)
+        }, 5000)
+        setTitle('')
+        setAuthor('')
+        setUrl('')
     }
 
     return (

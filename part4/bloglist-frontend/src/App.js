@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import NewBlog from './components/NewBlog'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 
 const logOut = () => {
@@ -14,6 +15,8 @@ const App = () => {
   const [user, setUser] = useState(null)
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
+  const [message, setMessage] = useState(null)
+  const [isError, setIsError] = useState(false)
 
   useEffect(() => {
     blogService.getAll().then(blogs =>
@@ -32,17 +35,21 @@ const App = () => {
 
   if (user === null) {
     return (
-      <LoginForm username={username} setUsername={setUsername} password={password} setPassword={setPassword} setUser={setUser} />
+      <>
+        <Notification message={message} setMessage={setMessage} isError={isError} setIsError={setIsError} />
+        <LoginForm username={username} setUsername={setUsername} password={password} setPassword={setPassword} setUser={setUser} setMessage={setMessage} setIsError={setIsError} />
+      </>
     )
   }
 
   return (
     <div>
       <h2>blogs</h2>
+      <Notification message={message} setMessage={setMessage} isError={isError} setIsError={setIsError} />
       <p>{user.name} logged in
       <button onClick={logOut}>log out</button>
       </p>
-      <NewBlog blogs={blogs} setBlogs={setBlogs} />
+      <NewBlog blogs={blogs} setBlogs={setBlogs} setMessage={setMessage} />
       {blogs.map(blog =>
         <Blog key={blog.id} blog={blog} />
       )}
