@@ -6,6 +6,9 @@ const LoginForm = ({ username, setUsername, password, setPassword, setUser }) =>
         event.preventDefault();
         try {
             const user = await loginService.login({ username, password })
+            window.localStorage.setItem(
+                'loggedBlogUser', JSON.stringify(user)
+            )
             setUser(user)
             setUsername('')
             setPassword('')
