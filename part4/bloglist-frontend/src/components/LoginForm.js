@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
+import React from 'react'
 import loginService from '../services/login'
+import blogService from '../services/blogs'
 
 const LoginForm = ({ username, setUsername, password, setPassword, setUser }) => {
     const handleLogin = async (event) => {
@@ -9,6 +10,7 @@ const LoginForm = ({ username, setUsername, password, setPassword, setUser }) =>
             window.localStorage.setItem(
                 'loggedBlogUser', JSON.stringify(user)
             )
+            blogService.setToken(user.token)
             setUser(user)
             setUsername('')
             setPassword('')
