@@ -1,7 +1,10 @@
 import React, { useState } from 'react'
+import blogService from '../services/blogs'
+
 
 const Blog = ({ blog }) => {
   const [additionalInfo, setAdditionalInfo] = useState(false)
+  const [likes, setLikes] = useState(blog.likes)
 
   const toggleAdditionalInfo = () => setAdditionalInfo(!additionalInfo)
 
@@ -11,6 +14,20 @@ const Blog = ({ blog }) => {
     border: 'solid',
     borderWidth: 1,
     marginBottom: 5
+  }
+
+  const blogLike = () => {
+    const likedBlog = {
+      'title': blog.title,
+      'likes': likes + 1,
+      'author': blog.author,
+      'url': blog.url,
+      'user': blog.user,
+      'id': blog.id
+    }
+
+    blogService.editBlog(blog.id, likedBlog)
+    setLikes(likes + 1)
   }
 
   const BasicInfoLayout = () => (
@@ -25,8 +42,8 @@ const Blog = ({ blog }) => {
       <button onClick={toggleAdditionalInfo}>hide</button>
       </p>
       <p>{blog.url}</p>
-      <p>likes {blog.likes}
-      <button onClick={() => console.log('like clicked')}>like</button>
+      <p>likes {likes}
+      <button onClick={blogLike}>like</button>
       </p>
       <p>{blog.author}</p>
     </div>

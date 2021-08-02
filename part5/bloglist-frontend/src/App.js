@@ -7,6 +7,7 @@ import Notification from './components/Notification'
 import Togglable from './components/Togglable'
 // services
 import blogService from './services/blogs'
+import loginService from './services/login'
 
 const logOut = () => {
   window.localStorage.clear()
@@ -34,11 +35,29 @@ const App = () => {
     }
   }, [])
 
+  const handleLoginApp = async (username, password) => {
+    try {
+      const user = await loginService.login({ username, password })
+      window.localStorage.setItem(
+        'loggedBlogUser', JSON.stringify(user)
+      )
+      blogService.setToken(user.token)
+      setUser(user)
+    } catch (exception) {
+      setIsError(true)
+      setMessage('Wrong username or password')
+      setTimeout(() => {
+        setMessage(null)
+        setIsError(false)
+      }, 5000)
+    }
+  }
+
   if (user === null) {
     return (
       <>
-        <Notification message={message} setMessage={setMessage} isError={isError} setIsError={setIsError} />
-        <LoginForm setUser={setUser} setMessage={setMessage} setIsError={setIsError} />
+        <Notification message={message} isError={isError} />
+        <LoginForm handleLoginApp={handleLoginApp} />
       </>
     )
   }
@@ -46,7 +65,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      <Notification message={message} setMessage={setMessage} isError={isError} setIsError={setIsError} />
+      <Notification message={message} isError={isError} />
       <p>{user.name} logged in
       <button onClick={logOut}>log out</button>
       </p>
