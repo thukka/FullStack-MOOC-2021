@@ -1,16 +1,15 @@
-import React, { useState } from 'react'
-import blogService from '../services/blogs'
+import React, { useState } from 'react';
 
 const LoginForm = ({ handleLoginApp }) => {
-    const [username, setUsername] = useState('')
-    const [password, setPassword] = useState('')
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
 
     const handleLogin = (event) => {
         event.preventDefault();
-        handleLoginApp(username, password)
-        setUsername('')
-        setPassword('')
-    }
+        handleLoginApp(username, password);
+        setUsername('');
+        setPassword('');
+    };
 
     return (
         <div>
@@ -33,7 +32,7 @@ const LoginForm = ({ handleLoginApp }) => {
                 <button type='submit'>login</button>
             </form>
         </div>
-    )
-}
+    );
+};
 
-export default LoginForm
+export default LoginForm;

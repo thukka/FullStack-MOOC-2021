@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 const Notification = ({ message, isError }) => {
 
@@ -8,20 +8,20 @@ const Notification = ({ message, isError }) => {
         margin: 'auto',
         width: '50%',
         padding: '10px'
-    } 
+    };
     if (isError === true) {
-        notificationStyle.color = 'red'
+        notificationStyle.color = 'red';
     }
 
     if (message === null) {
-        return null
+        return null;
     }
 
     return (
         <div style={notificationStyle}>
             {message}
         </div>
-    )
-}
+    );
+};
 
-export default Notification
+export default Notification;

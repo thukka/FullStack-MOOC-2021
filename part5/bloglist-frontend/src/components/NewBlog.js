@@ -1,65 +1,65 @@
-import React, { useState } from 'react'
-import blogService from '../services/blogs'
-import PropTypes from 'prop-types'
+import React, { useState } from 'react';
+import blogService from '../services/blogs';
+import PropTypes from 'prop-types';
 
 const NewBlog = ({ blogs, setBlogs, setMessage }) => {
-    const [title, setTitle] = useState('')
-    const [author, setAuthor] = useState('')
-    const [url, setUrl] = useState('')
+    const [title, setTitle] = useState('');
+    const [author, setAuthor] = useState('');
+    const [url, setUrl] = useState('');
 
     const createBlog = (event) => {
-        event.preventDefault()
+        event.preventDefault();
         const newBlog = {
             'title': title,
             'author': author,
             'url': url,
-        }
+        };
         blogService.newBlog(newBlog)
             .then(returnedBlog => {
-                setBlogs(blogs.concat(returnedBlog))
-            })
-        setMessage(`a new blog ${newBlog.title} was added`)
+                setBlogs(blogs.concat(returnedBlog));
+            });
+        setMessage(`a new blog ${newBlog.title} was added`);
         setTimeout(() => {
-            setMessage(null)
-        }, 5000)
-        setTitle('')
-        setAuthor('')
-        setUrl('')
-    }
+            setMessage(null);
+        }, 5000);
+        setTitle('');
+        setAuthor('');
+        setUrl('');
+    };
 
     return (
         <div>
             <h2>create new</h2>
             <form onSubmit={createBlog} id='create-new-blog'><p>
                 title:
-                    <input type='text'
+                <input type='text'
                     name='Title'
                     value={title}
                     onChange={({ target }) => setTitle(target.value)} /></p>
-                <p>
+            <p>
                     author:
-                    <input type='text'
-                        name='Author'
-                        value={author}
-                        onChange={({ target }) => setAuthor(target.value)} />
-                </p>
-                <p>
+                <input type='text'
+                    name='Author'
+                    value={author}
+                    onChange={({ target }) => setAuthor(target.value)} />
+            </p>
+            <p>
                     url:
-                    <input type='text'
-                        name='URL'
-                        value={url}
-                        onChange={({ target }) => setUrl(target.value)} />
-                </p>
-                <button type='submit'>create</button>
+                <input type='text'
+                    name='URL'
+                    value={url}
+                    onChange={({ target }) => setUrl(target.value)} />
+            </p>
+            <button type='submit'>create</button>
             </form>
         </div>
-    )
-}
+    );
+};
 
 NewBlog.propTypes = {
     blogs: PropTypes.array.isRequired,
     setBlogs: PropTypes.func.isRequired,
     setMessage: PropTypes.func.isRequired
-}
+};
 
-export default NewBlog
+export default NewBlog;
