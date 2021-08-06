@@ -16,6 +16,7 @@ const Blog = ({ blog, blogs, setBlogs, user }) => {
         marginBottom: 5
     };
 
+    // functions
     const blogLike = () => {
         const likedBlog = {
             'title': blog.title,
@@ -40,14 +41,15 @@ const Blog = ({ blog, blogs, setBlogs, user }) => {
         setBlogs(blogs);
     };
 
+    // layouts and render
     const BasicInfoLayout = () => (
-        <div style={blogStyle}>
+        <div style={blogStyle} className='blog'>
             {blog.title} {blog.author} <button onClick={toggleAdditionalInfo}>view</button>
         </div>
     );
 
     const AddInfoLayout = () => (
-        <div style={blogStyle}>
+        <div style={blogStyle} className='addInfoLayout'>
             <p>{blog.title}
                 <button onClick={toggleAdditionalInfo}>hide</button>
             </p>
