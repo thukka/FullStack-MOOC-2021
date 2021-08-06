@@ -58,6 +58,18 @@ const App = () => {
         blogService.editBlog(blog.id, likedBlog);
     };
 
+    const newBlogHandle = async (newBlog) => {
+        blogService.newBlog(newBlog)
+            .then(returnedBlog => {
+                setBlogs(blogs.concat(returnedBlog));
+            });
+        setMessage(`a new blog ${newBlog.title} was added`);
+        setTimeout(() => {
+            setMessage(null);
+        }, 5000);
+    };
+
+    // renders
     if (user === null) {
         return (
             <>
@@ -75,7 +87,7 @@ const App = () => {
                 <button onClick={logOut}>log out</button>
             </p>
             <Togglable buttonLabel='create new blog'>
-                <NewBlog blogs={blogs} setBlogs={setBlogs} setMessage={setMessage} />
+                <NewBlog newBlogHandle={newBlogHandle} />
             </Togglable>
             {
                 blogs.sort((a, b) => b.likes - a.likes).map(blog =>
