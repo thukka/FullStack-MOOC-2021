@@ -20,10 +20,11 @@ describe('<Blog />', () => {
     const mockBlogs = [];
     const mockSetBlogs = jest.fn();
     const mockUser = {};
+    const mockHandle = jest.fn();
 
     beforeEach(() => {
         component = render(
-            <Blog blog={newBlog} blogs={mockBlogs} setBlogs={mockSetBlogs} user={mockUser} />
+            <Blog blog={newBlog} blogs={mockBlogs} setBlogs={mockSetBlogs} user={mockUser} blogLikeHandle={mockHandle} />
         );
     });
 
@@ -50,5 +51,16 @@ describe('<Blog />', () => {
         expect(component.container).toHaveTextContent(
             'likes 50'
         );
+    });
+
+    test('like function was pressed twice', () => {
+        const button = component.getByText('view');
+        fireEvent.click(button);
+
+        const likeButton = component.getByText('like');
+        fireEvent.click(likeButton);
+        fireEvent.click(likeButton);
+
+        expect(mockHandle.mock.calls).toHaveLength(2);
     });
 });

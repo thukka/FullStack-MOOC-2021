@@ -35,6 +35,7 @@ const App = () => {
         }
     }, []);
 
+    // handles
     const handleLoginApp = async (username, password) => {
         try {
             const user = await loginService.login({ username, password });
@@ -51,6 +52,10 @@ const App = () => {
                 setIsError(false);
             }, 5000);
         }
+    };
+
+    const blogLikeHandle = async (blog, likedBlog) => {
+        blogService.editBlog(blog.id, likedBlog);
     };
 
     if (user === null) {
@@ -74,7 +79,7 @@ const App = () => {
             </Togglable>
             {
                 blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-                    <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} user={user} />
+                    <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} user={user} blogLikeHandle={blogLikeHandle} />
                 )
             }
         </div>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import blogService from '../services/blogs';
 import PropTypes from 'prop-types';
 
-const Blog = ({ blog, blogs, setBlogs, user }) => {
+const Blog = ({ blog, blogs, setBlogs, user, blogLikeHandle }) => {
     const [additionalInfo, setAdditionalInfo] = useState(false);
     const [likes, setLikes] = useState(blog.likes);
 
@@ -26,8 +26,7 @@ const Blog = ({ blog, blogs, setBlogs, user }) => {
             'user': blog.user,
             'id': blog.id
         };
-
-        blogService.editBlog(blog.id, likedBlog);
+        blogLikeHandle(blog, likedBlog);
         setLikes(likes + 1);
     };
 
