@@ -35,7 +35,7 @@ describe('Blog app', function () {
                 cy.login({ username: 'toni', password: Cypress.env('testPW') });
             });
 
-            it.only('A blog can be created', function () {
+            it('A blog can be created', function () {
                 cy.contains('create new blog').click();
                 cy.get('#title').type('Cypress Blog');
                 cy.get('#author').type('toni testaaja');
@@ -43,6 +43,13 @@ describe('Blog app', function () {
                 cy.get('#submit-blog').click();
                 cy.contains('a new blog Cypress Blog was added');
                 cy.get('.show-blog-list').should('contain', 'Cypress Blog');
+            });
+
+            it('a blog can be liked', function () {
+                cy.newBlog('hello cypress');
+                cy.contains('view').click();
+                cy.contains('like').click();
+                cy.contains('likes 1');
             });
         });
     });
