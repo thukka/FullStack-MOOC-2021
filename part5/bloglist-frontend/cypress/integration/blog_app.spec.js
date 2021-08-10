@@ -50,12 +50,29 @@ describe('Blog app', function () {
                 cy.contains('likes 1');
             });
 
-            it.only('a blog can be deleted', function () {
+            it('a blog can be deleted', function () {
                 cy.newBlog('delete this', 'toni cypresstest', 'cypress.io');
                 cy.contains('view').click();
                 cy.contains('remove').click();
                 cy.on('window:confirm', () => true);
                 cy.get('.show-blog-list').should('not.contain', 'delete this');
+            });
+
+            it.only('most liked blog is first in the list', function () {
+                cy.newBlog('blog 2', 'toni cypresstest', 'cypress.io');
+                cy.newBlog('blog 3', 'toni cypresstest', 'cypress.io');
+                cy.contains('blog 3').contains('view').click();
+                cy.contains('blog 3').parent().contains('like').click();
+                cy.contains('blog 3').parent().contains('like').click();
+                cy.visit('http://localhost:3000');
+                cy.get('.blog').then(blogs => {
+                    console.log('blogit:', blogs);
+                    if (blogs[0].innerText === 'blog 3 toni cypresstest view') {
+                        console.log('OK - no errors');
+                    } else {
+                        throw new Error('most liked blog is NOT at the top');
+                    }
+                });
             });
         });
     });
