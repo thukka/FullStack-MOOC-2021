@@ -31,10 +31,14 @@ Cypress.Commands.add('login', ({ username, password }) => {
     });
 });
 
-Cypress.Commands.add('newBlog', (title) => {
-    cy.contains('create new blog').click();
-    cy.get('#title').type(`${title}`);
-    cy.get('#author').type('toni testaaja');
-    cy.get('#URL').type('www.cypress.io');
-    cy.get('#submit-blog').click();
+Cypress.Commands.add('newBlog', ( title, author, url ) => {
+    cy.request({
+        method: 'POST',
+        url: 'http://localhost:3003/api/blogs',
+        body: { title, author, url },
+        headers: {
+            'Authorization': `bearer ${JSON.parse(localStorage.getItem('loggedBlogUser')).token}`
+        }
+    });
+    cy.visit('http://localhost:3000');
 });

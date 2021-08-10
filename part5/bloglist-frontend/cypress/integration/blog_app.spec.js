@@ -17,9 +17,7 @@ describe('Blog app', function () {
 
     describe('Login', function () {
         it('User can log in succesfully', function () {
-            cy.get('#username').type('toni');
-            cy.get('#password').type(Cypress.env('testPW'));
-            cy.get('#login-button').click();
+            cy.login({ username: 'toni', password: Cypress.env('testPW') });
             cy.contains('toni testaaja logged in');
         });
 
@@ -46,10 +44,18 @@ describe('Blog app', function () {
             });
 
             it('a blog can be liked', function () {
-                cy.newBlog('hello cypress');
+                cy.newBlog('hello cypress', 'toni cypresstest', 'cypress.io');
                 cy.contains('view').click();
                 cy.contains('like').click();
                 cy.contains('likes 1');
+            });
+
+            it.only('a blog can be deleted', function () {
+                cy.newBlog('delete this', 'toni cypresstest', 'cypress.io');
+                cy.contains('view').click();
+                cy.contains('remove').click();
+                cy.on('window:confirm', () => true);
+                cy.get('.show-blog-list').should('not.contain', 'delete this');
             });
         });
     });
