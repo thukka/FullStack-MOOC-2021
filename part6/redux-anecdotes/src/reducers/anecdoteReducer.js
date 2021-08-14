@@ -27,6 +27,7 @@ const reducer = (state = initialState, action) => {
   console.log('state now: ', state)
   console.log('action', action)
   switch (action.type) {
+
     case 'VOTE':
       const objectToChange = state.find(n => n.id === action.data.id)
       const changedObject = {
@@ -37,14 +38,39 @@ const reducer = (state = initialState, action) => {
       return sortAnecdotes(state);
 
     case 'NEW_ANECDOTE':
-      let newAnecdote = {
+      let formNewAnecdote = {
         content: action.data.content,
         id: getId(),
         votes: 0
       }
-      return [...state, newAnecdote]
+      return [...state, formNewAnecdote]
+
     default: return state
   }
+}
+
+// action creators
+
+export const voteAnecdoteAction = id => {
+  return (
+    {
+      type: 'VOTE',
+      data: {
+        id: id
+      }
+    }
+  )
+}
+
+export const newAnecdoteAction = content => {
+  return (
+    {
+      type: 'NEW_ANECDOTE',
+      data: {
+        content: content
+      }
+    }
+  )
 }
 
 export default reducer
