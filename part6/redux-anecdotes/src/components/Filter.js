@@ -9,7 +9,6 @@ const Filter = () => {
         event.preventDefault()
         const value = event.target.value
         dispatch(setFilter(value))
-
     }
 
     const style = {
