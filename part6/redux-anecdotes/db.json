@@ -8,7 +8,7 @@
     {
       "content": "Adding manpower to a late software project makes it later!",
       "id": "21149",
-      "votes": 0
+      "votes": 1
     },
     {
       "content": "The first 90 percent of the code accounts for the first 90 percent of the development time...The remaining 10 percent of the code accounts for the other 90 percent of the development time.",
@@ -42,12 +42,12 @@
     },
     {
       "content": "test2db",
-      "votes": 1,
+      "votes": 4,
       "id": "iT7VJSn"
     },
     {
       "content": "test2db vol 2",
-      "votes": 6,
+      "votes": 10,
       "id": "suW9O7U"
     },
     {
@@ -62,13 +62,23 @@
     },
     {
       "content": "thunk test",
-      "votes": 9,
+      "votes": 46,
       "id": "IvusSKy"
     },
     {
       "content": "timeout test",
       "votes": 0,
       "id": "pdIIy1S"
+    },
+    {
+      "content": "anni on paras",
+      "votes": 121,
+      "id": "IN3lNcL"
+    },
+    {
+      "content": "testing connect()",
+      "votes": 0,
+      "id": "nqY6lFe"
     }
   ]
 }
