@@ -11,13 +11,18 @@ const notificationReducer = (state = '', action) => {
 
 }
 
-export const setNotification = (notification) => {
-    return (
-        {
+
+export const setNotification = (text, time) => {
+    let timeInMilliSeconds = (time * 1000)
+    return async dispatch => {
+        dispatch({
             type: 'SET_NOTIFICATION',
-            notification
-        }
-    )
+            notification: text
+        })
+        setTimeout(() => {
+            dispatch({ type: 'RESET_NOTIFICATION' })
+        }, timeInMilliSeconds)
+    }
 }
 
 export const resetNotification = () => {
