@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useField } from './hooks'
 import {
   Route,
   Link,
@@ -67,22 +68,28 @@ const Footer = () => (
 )
 
 const CreateNew = (props) => {
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
+  const { resetfield: resetContent, ...content } = useField('text')
+  const { resetfield: resetAuthor, ...author } = useField('text')
+  const { resetfield: resetInfo, ...info } = useField('text')
   const history = useHistory()
 
   const handleSubmit = (e) => {
     e.preventDefault()
     props.addNew({
-      content,
-      author,
-      info,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0
     })
     history.push('/')
-    props.setNotification(`a new anecdote '${content}' was created`)
+    props.setNotification(`a new anecdote '${content.value}' was created`)
     setTimeout(() => props.setNotification(''), 10000)
+  }
+
+  const resetAll = () => {
+    resetContent()
+    resetAuthor()
+    resetInfo()
   }
 
   return (
@@ -91,17 +98,18 @@ const CreateNew = (props) => {
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input name='content' value={content} onChange={(e) => setContent(e.target.value)} />
+          <input {...content} />
         </div>
         <div>
           author
-          <input name='author' value={author} onChange={(e) => setAuthor(e.target.value)} />
+          <input {...author} />
         </div>
         <div>
           url for more info
-          <input name='info' value={info} onChange={(e) => setInfo(e.target.value)} />
+          <input {...info} />
         </div>
         <button>create</button>
+        <button type='button' onClick={resetAll}>reset</button>
       </form>
     </div>
   )
@@ -148,11 +156,9 @@ const App = () => {
   }
 
   const match = useRouteMatch('/anecdotes/:id')
-  console.log('match obj: ', match)
   const anecdote = match
     ? anecdotes.find(a => a.id === match.params.id)
     : null
-  console.log('anecdote obj: ', anecdote)
 
   return (
     <div>
