@@ -1,6 +1,8 @@
 import React from 'react';
+import { useSelector } from 'react-redux';
 
-const Notification = ({ message, isError }) => {
+const Notification = () => {
+    const notification = useSelector(state => state);
 
     const notificationStyle = {
         color: 'green',
@@ -9,17 +11,18 @@ const Notification = ({ message, isError }) => {
         width: '50%',
         padding: '10px'
     };
-    if (isError === true) {
+
+    if (notification.isError === true) {
         notificationStyle.color = 'red';
     }
 
-    if (message === null) {
+    if (notification.msg === null) {
         return null;
     }
 
     return (
         <div style={notificationStyle}>
-            {message}
+            {notification.msg}
         </div>
     );
 };
