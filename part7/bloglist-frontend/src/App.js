@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 // components
 import Blog from './components/Blog';
 import LoginForm from './components/LoginForm';
@@ -11,6 +11,7 @@ import blogService from './services/blogs';
 import loginService from './services/login';
 // redux actions
 import { setNotification, resetNotification } from './reducers/notificationReducer';
+import { initBlogs, addBlog } from './reducers/blogReducer';
 
 const logOut = () => {
     window.localStorage.clear();
@@ -18,15 +19,13 @@ const logOut = () => {
 };
 
 const App = () => {
-    const [blogs, setBlogs] = useState([]);
+    const blogs = useSelector(state => state.blogs);
     const [user, setUser] = useState(null);
     const dispatch = useDispatch();
 
     useEffect(() => {
-        blogService.getAll().then(blogs =>
-            setBlogs(blogs)
-        );
-    }, []);
+        dispatch(initBlogs());
+    }, [dispatch]);
 
     useEffect(() => {
         const loggedUserJSON = window.localStorage.getItem('loggedBlogUser');
@@ -59,11 +58,8 @@ const App = () => {
         blogService.editBlog(blog.id, likedBlog);
     };
 
-    const newBlogHandle = async (newBlog) => {
-        blogService.newBlog(newBlog)
-            .then(returnedBlog => {
-                setBlogs(blogs.concat(returnedBlog));
-            });
+    const newBlogHandle = (newBlog) => {
+        dispatch(addBlog(newBlog));
         dispatch(setNotification(`a new blog ${newBlog.title} was added`, false));
         setTimeout(() => {
             dispatch(resetNotification());
@@ -93,7 +89,7 @@ const App = () => {
             <div className='show-blog-list'>
                 {
                     blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-                        <Blog key={blog.id} blog={blog} blogs={blogs} setBlogs={setBlogs} user={user} blogLikeHandle={blogLikeHandle} />
+                        <Blog key={blog.id} blog={blog} blogs={blogs} user={user} blogLikeHandle={blogLikeHandle} />
                     )
                 }
             </div>
