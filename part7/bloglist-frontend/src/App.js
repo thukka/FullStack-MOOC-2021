@@ -46,16 +46,11 @@ const App = () => {
             blogService.setToken(user.token);
             setUser(user);
         } catch (exception) {
-
             dispatch(setNotification('Wrong username or password', true));
             setTimeout(() => {
                 dispatch(resetNotification());
             }, 5000);
         }
-    };
-
-    const blogLikeHandle = async (blog, likedBlog) => {
-        blogService.editBlog(blog.id, likedBlog);
     };
 
     const newBlogHandle = (newBlog) => {
@@ -89,7 +84,7 @@ const App = () => {
             <div className='show-blog-list'>
                 {
                     blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-                        <Blog key={blog.id} blog={blog} blogs={blogs} user={user} blogLikeHandle={blogLikeHandle} />
+                        <Blog key={blog.id} blog={blog} user={user} />
                     )
                 }
             </div>

@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import blogService from '../services/blogs';
 import PropTypes from 'prop-types';
+import { removeBlog as RemoveBlogReducer, likeBlog } from '../reducers/blogReducer';
+import { useDispatch } from 'react-redux';
 
-const Blog = ({ blog, blogs, setBlogs, user, blogLikeHandle }) => {
+const Blog = ({ blog, user }) => {
     const [additionalInfo, setAdditionalInfo] = useState(false);
-    const [likes, setLikes] = useState(blog.likes);
+    const dispatch = useDispatch();
 
     const toggleAdditionalInfo = () => setAdditionalInfo(!additionalInfo);
 
@@ -18,26 +19,15 @@ const Blog = ({ blog, blogs, setBlogs, user, blogLikeHandle }) => {
 
     // functions
     const blogLike = () => {
-        const likedBlog = {
-            'title': blog.title,
-            'likes': likes + 1,
-            'author': blog.author,
-            'url': blog.url,
-            'user': blog.user,
-            'id': blog.id
-        };
-        blogLikeHandle(blog, likedBlog);
-        setLikes(likes + 1);
+        const likedBlog = { ...blog, likes: blog.likes + 1 };
+        dispatch(likeBlog(likedBlog));
     };
 
     const removeBlog = () => {
         const blogId = blog.id;
         if (window.confirm(`delete ${blog.title} ?`)) {
-            blogService.removeBlog(blogId);
+            dispatch(RemoveBlogReducer(blogId));
         }
-
-        blogs = blogs.filter(b => !(b.id === blogId));
-        setBlogs(blogs);
     };
 
     // layouts and render
@@ -53,7 +43,7 @@ const Blog = ({ blog, blogs, setBlogs, user, blogLikeHandle }) => {
                 <button onClick={toggleAdditionalInfo}>hide</button>
             </p>
             <p>{blog.url}</p>
-            <p>likes {likes}
+            <p>likes {blog.likes}
                 <button onClick={blogLike}>like</button>
             </p>
             <p>{blog.author}</p>
@@ -75,8 +65,6 @@ const Blog = ({ blog, blogs, setBlogs, user, blogLikeHandle }) => {
 
 Blog.propTypes = {
     blog: PropTypes.object.isRequired,
-    blogs: PropTypes.array.isRequired,
-    setBlogs: PropTypes.func.isRequired,
     user: PropTypes.object.isRequired
 };
 
