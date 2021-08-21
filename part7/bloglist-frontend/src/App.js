@@ -6,9 +6,12 @@ import LoginForm from './components/LoginForm';
 import NewBlog from './components/NewBlog';
 import Notification from './components/Notification';
 import Togglable from './components/Togglable';
+import Users from './components/Users';
 // redux actions
 import { initBlogs } from './reducers/blogReducer';
 import { setUser } from './reducers/userReducer';
+// react-router
+import { Switch, Route } from 'react-router-dom';
 
 const logOut = () => {
     window.localStorage.clear();
@@ -49,16 +52,24 @@ const App = () => {
             <p>{user.name} logged in
                 <button onClick={logOut}>log out</button>
             </p>
-            <Togglable buttonLabel='create new blog'>
-                <NewBlog />
-            </Togglable>
-            <div className='show-blog-list'>
-                {
-                    blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-                        <Blog key={blog.id} blog={blog} user={user} />
-                    )
-                }
-            </div>
+
+            <Switch>
+                <Route path='/users'>
+                    <Users />
+                </Route>
+                <Route path='/'>
+                    <Togglable buttonLabel='create new blog'>
+                        <NewBlog />
+                    </Togglable>
+                    <div className='show-blog-list'>
+                        {
+                            blogs.sort((a, b) => b.likes - a.likes).map(blog =>
+                                <Blog key={blog.id} blog={blog} user={user} />
+                            )
+                        }
+                    </div>
+                </Route>
+            </Switch>
         </div>
     );
 };
