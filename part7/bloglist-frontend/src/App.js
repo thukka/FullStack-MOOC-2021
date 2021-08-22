@@ -7,16 +7,12 @@ import NewBlog from './components/NewBlog';
 import Notification from './components/Notification';
 import Togglable from './components/Togglable';
 import Users, { SingleUserView } from './components/Users';
+import TopNav from './components/TopNav';
 // redux actions
 import { initBlogs } from './reducers/blogReducer';
 import { setUser } from './reducers/userReducer';
 // react-router
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
-
-const logOut = () => {
-    window.localStorage.clear();
-    window.location.reload();
-};
 
 const App = () => {
     const blogs = useSelector(state => state.blogs);
@@ -49,11 +45,9 @@ const App = () => {
 
     return (
         <div>
+            <TopNav />
             <h2>blogs</h2>
             <Notification />
-            <p>{user.name} logged in
-                <button onClick={logOut}>log out</button>
-            </p>
 
             <Switch>
                 <Route path='/users/:id'>
