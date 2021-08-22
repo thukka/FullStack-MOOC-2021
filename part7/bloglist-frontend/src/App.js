@@ -6,7 +6,7 @@ import LoginForm from './components/LoginForm';
 import NewBlog from './components/NewBlog';
 import Notification from './components/Notification';
 import Togglable from './components/Togglable';
-import Users from './components/Users';
+import Users, { SingleUserView }  from './components/Users';
 // redux actions
 import { initBlogs } from './reducers/blogReducer';
 import { setUser } from './reducers/userReducer';
@@ -54,9 +54,10 @@ const App = () => {
             </p>
 
             <Switch>
-                <Route path='/users'>
-                    <Users />
+                <Route path='/users/:id'>
+                    <SingleUserView blogs={blogs} />
                 </Route>
+                <Route path='/users' component={Users} />
                 <Route path='/'>
                     <Togglable buttonLabel='create new blog'>
                         <NewBlog />
