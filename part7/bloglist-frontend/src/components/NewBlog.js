@@ -9,21 +9,29 @@ const NewBlog = () => {
     const [url, setUrl] = useState('');
     const dispatch = useDispatch();
 
-    const createBlog = (event) => {
+    const createBlog = async (event) => {
         event.preventDefault();
         const newBlog = {
             'title': title,
             'author': author,
             'url': url,
         };
-        dispatch(addBlog(newBlog));
-        dispatch(setNotification(`a new blog ${newBlog.title} was added`, false));
-        setTimeout(() => {
-            dispatch(resetNotification());
-        }, 5000);
-        setTitle('');
-        setAuthor('');
-        setUrl('');
+        let dispatchblog = await dispatch(addBlog(newBlog));
+        console.log('dispatchblog:', dispatchblog);
+        if (dispatchblog === false) {
+            dispatch(setNotification('Error creating a new blog! Token might have expired, please relog.', true));
+            setTimeout(() => {
+                dispatch(resetNotification());
+            }, 10000);
+        } else {
+            dispatch(setNotification(`a new blog ${newBlog.title} was added`, false));
+            setTimeout(() => {
+                dispatch(resetNotification());
+            }, 5000);
+            setTitle('');
+            setAuthor('');
+            setUrl('');
+        }
     };
 
     return (
@@ -37,7 +45,7 @@ const NewBlog = () => {
                     value={title}
                     onChange={({ target }) => setTitle(target.value)} /></p>
             <p>
-                    author:
+                author:
                 <input type='text'
                     name='Author'
                     id='author'
@@ -45,7 +53,7 @@ const NewBlog = () => {
                     onChange={({ target }) => setAuthor(target.value)} />
             </p>
             <p>
-                    url:
+                url:
                 <input type='text'
                     name='URL'
                     id='URL'

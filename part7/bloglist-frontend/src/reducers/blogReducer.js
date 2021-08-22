@@ -29,11 +29,15 @@ export const initBlogs = () => {
 
 export const addBlog = (blog) => {
     return async dispatch => {
-        const postBlog = await blogService.newBlog(blog);
-        dispatch({
-            type: 'ADD_BLOG',
-            blog: postBlog
-        });
+        try {
+            let postBlog = await blogService.newBlog(blog);
+            dispatch({
+                type: 'ADD_BLOG',
+                blog: postBlog
+            });
+        } catch (err) {
+            return false;
+        }
     };
 };
 
