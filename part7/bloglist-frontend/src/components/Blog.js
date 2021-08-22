@@ -4,24 +4,6 @@ import { removeBlog as RemoveBlogReducer, likeBlog } from '../reducers/blogReduc
 import { useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 
-export const SingleBlogView = ({ blog }) => {
-    const dispatch = useDispatch();
-    if (blog === undefined) {
-        return null;
-    }
-
-    return (
-        <>
-            <p><a href={blog.url}>{blog.url}</a></p>
-            <p>{blog.title}</p>
-            <p>likes {blog.likes}
-                <button onClick={() => dispatch(likeBlog({ ...blog, likes: blog.likes + 1 }))}>like</button>
-            </p>
-            <p>{blog.author}</p>
-        </>
-    );
-};
-
 const Blog = ({ blog, user }) => {
     const [additionalInfo, setAdditionalInfo] = useState(false);
     const dispatch = useDispatch();

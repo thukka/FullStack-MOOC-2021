@@ -1,6 +1,7 @@
 const blogRouter = require('express').Router();
 const Blog = require('../models/blogreview');
 const User = require('../models/user');
+const Comments = require('../models/blogcomment');
 const { userExtractor } = require('../utils/middleware');
 
 blogRouter.get('/', async (request, response) => {
@@ -41,7 +42,7 @@ blogRouter.delete('/:id', userExtractor, async (request, response) => {
         return response.status(204).end();
     }
 
-    return response.status(401).json({ error: 'unauthorized access'});
+    return response.status(401).json({ error: 'unauthorized access' });
 });
 
 blogRouter.put('/:id', async (request, response) => {
@@ -56,6 +57,24 @@ blogRouter.put('/:id', async (request, response) => {
 
     const updateBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true });
     response.json(updateBlog.toJSON());
+});
+
+// single blog comments
+
+blogRouter.get('/:id/comments', async (request, response) => {
+    const blogId = request.params.id;
+    const commentList = await Comments.find({ blogId });
+    response.json(commentList.map(comment => comment.toJSON()));
+});
+
+blogRouter.post('/:id/comments', async (request, response) => {
+    const blogId = request.params.id;
+    const blog = new Comments({
+        'content': request.body.content,
+        'blogId': blogId
+    });
+    const savedComment = await blog.save();
+    response.json(savedComment.toJSON());
 });
 
 module.exports = blogRouter;
