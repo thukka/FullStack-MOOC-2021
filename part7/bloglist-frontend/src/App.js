@@ -1,17 +1,17 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 // components
-import Blog from './components/Blog';
+import Blog, { SingleBlogView } from './components/Blog';
 import LoginForm from './components/LoginForm';
 import NewBlog from './components/NewBlog';
 import Notification from './components/Notification';
 import Togglable from './components/Togglable';
-import Users, { SingleUserView }  from './components/Users';
+import Users, { SingleUserView } from './components/Users';
 // redux actions
 import { initBlogs } from './reducers/blogReducer';
 import { setUser } from './reducers/userReducer';
 // react-router
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, useRouteMatch } from 'react-router-dom';
 
 const logOut = () => {
     window.localStorage.clear();
@@ -22,6 +22,8 @@ const App = () => {
     const blogs = useSelector(state => state.blogs);
     const user = useSelector(state => state.user);
     const dispatch = useDispatch();
+    const match = useRouteMatch('/blogs/:id');
+    const singleBlog = match ? blogs.find(b => b.id === match.params.id) : null;
 
     useEffect(() => {
         dispatch(initBlogs());
@@ -56,6 +58,9 @@ const App = () => {
             <Switch>
                 <Route path='/users/:id'>
                     <SingleUserView blogs={blogs} />
+                </Route>
+                <Route path='/blogs/:id'>
+                    <SingleBlogView blog={singleBlog} />
                 </Route>
                 <Route path='/users' component={Users} />
                 <Route path='/'>

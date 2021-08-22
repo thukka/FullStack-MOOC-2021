@@ -2,6 +2,25 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { removeBlog as RemoveBlogReducer, likeBlog } from '../reducers/blogReducer';
 import { useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
+
+export const SingleBlogView = ({ blog }) => {
+    const dispatch = useDispatch();
+    if (blog === undefined) {
+        return null;
+    }
+
+    return (
+        <>
+            <p><a href={blog.url}>{blog.url}</a></p>
+            <p>{blog.title}</p>
+            <p>likes {blog.likes}
+                <button onClick={() => dispatch(likeBlog({ ...blog, likes: blog.likes + 1 }))}>like</button>
+            </p>
+            <p>{blog.author}</p>
+        </>
+    );
+};
 
 const Blog = ({ blog, user }) => {
     const [additionalInfo, setAdditionalInfo] = useState(false);
@@ -33,7 +52,7 @@ const Blog = ({ blog, user }) => {
     // layouts and render
     const BasicInfoLayout = () => (
         <div style={blogStyle} className='blog'>
-            {blog.title} {blog.author} <button onClick={toggleAdditionalInfo}>view</button>
+            <Link to={`/blogs/${blog.id}`}>{blog.title} {blog.author}</Link><button onClick={toggleAdditionalInfo}>view</button>
         </div>
     );
 
