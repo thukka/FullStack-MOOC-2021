@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { addBlog } from '../reducers/blogReducer';
 import { setNotification, resetNotification } from '../reducers/notificationReducer';
+import { Input, Button } from '@material-ui/core';
 
 const NewBlog = () => {
     const [title, setTitle] = useState('');
@@ -17,7 +18,6 @@ const NewBlog = () => {
             'url': url,
         };
         let dispatchblog = await dispatch(addBlog(newBlog));
-        console.log('dispatchblog:', dispatchblog);
         if (dispatchblog === false) {
             dispatch(setNotification('Error creating a new blog! Token might have expired, please relog.', true));
             setTimeout(() => {
@@ -37,30 +37,26 @@ const NewBlog = () => {
     return (
         <div>
             <h2>create new</h2>
-            <form onSubmit={createBlog} id='create-new-blog'><p>
+            <form onSubmit={createBlog} id='create-new-blog'>
                 title:
-                <input type='text'
+                <Input type='text'
                     name='Title'
                     id='title'
                     value={title}
-                    onChange={({ target }) => setTitle(target.value)} /></p>
-            <p>
-                author:
-                <input type='text'
+                    onChange={({ target }) => setTitle(target.value)} />
+                    author:
+                <Input type='text'
                     name='Author'
                     id='author'
                     value={author}
                     onChange={({ target }) => setAuthor(target.value)} />
-            </p>
-            <p>
-                url:
-                <input type='text'
+                    url:
+                <Input type='text'
                     name='URL'
                     id='URL'
                     value={url}
                     onChange={({ target }) => setUrl(target.value)} />
-            </p>
-            <button id='submit-blog' type='submit'>create</button>
+                <Button color='primary' variant='outlined' id='submit-blog' type='submit'>create</Button>
             </form>
         </div>
     );

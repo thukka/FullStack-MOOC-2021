@@ -14,6 +14,9 @@ import { initBlogs } from './reducers/blogReducer';
 import { setUser } from './reducers/userReducer';
 // react-router
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
+// materialUI
+import { TableContainer, Paper, TableBody, Table, TableRow } from '@material-ui/core';
+
 
 const App = () => {
     const blogs = useSelector(state => state.blogs);
@@ -48,7 +51,7 @@ const App = () => {
     }
 
     return (
-        <div>
+        <>
             <TopNav />
             <h2>blogs</h2>
             <Notification />
@@ -65,16 +68,24 @@ const App = () => {
                     <Togglable buttonLabel='create new blog'>
                         <NewBlog />
                     </Togglable>
-                    <div className='show-blog-list'>
-                        {
-                            blogs.sort((a, b) => b.likes - a.likes).map(blog =>
-                                <Blog key={blog.id} blog={blog} user={user} />
-                            )
-                        }
+                    <div style={{ 'marginTop': 15 }}>
+                        <TableContainer component={Paper}>
+                            <Table>
+                                <TableBody>
+                                    {
+                                        blogs.sort((a, b) => b.likes - a.likes).map(blog =>
+                                            <TableRow key={blog.id}>
+                                                <Blog key={blog.id} blog={blog} user={user} />
+                                            </TableRow>
+                                        )
+                                    }
+                                </TableBody>
+                            </Table>
+                        </TableContainer>
                     </div>
                 </Route>
             </Switch>
-        </div>
+        </>
     );
 };
 
