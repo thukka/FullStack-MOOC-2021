@@ -9,9 +9,13 @@ const Authors = (props) => {
     refetchQueries: [{ query: ALL_AUTHORS }]
   })
 
-  const submit = (event) => {
+  const submit = async (event) => {
     event.preventDefault()
-    editAuthor({ variables: { name, year: parseInt(year) } })
+    try {
+      await editAuthor({ variables: { name, year: parseInt(year) } })
+    } catch (error) {
+      console.log('error: ', error.message)
+    }
     setName('')
     setYear('')
   }

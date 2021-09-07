@@ -51,7 +51,6 @@ type Mutation {
     title: String!
     published: Int!
     author: String!
-    authorBorn: Int!
     genres: [String!]!
   ): Book
   editAuthor(
@@ -107,7 +106,7 @@ const resolvers = {
       // if author doesnt exist save to db
       let author = await Author.findOne({ name: args.author })
       if (!author) {
-        author = { name: args.author, born: args.authorBorn }
+        author = { name: args.author, born: 0 }
         let authorSaved = new Author(author)
         try {
           await authorSaved.save()
@@ -117,8 +116,11 @@ const resolvers = {
         }
       }
 
+      console.log('currentUser:', currentUser)
+      console.log('author: ', author)
       // save book to db
       const book = { ...args, author: author }
+      console.log('book: ', book)
       const savedBook = new Book(book)
       try {
         await savedBook.save()
