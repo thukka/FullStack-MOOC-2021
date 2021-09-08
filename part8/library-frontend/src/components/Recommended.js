@@ -5,13 +5,16 @@ import { USER_INFO } from '../queries'
 const Recommended = (props) => {
 
     const userInfo = useQuery(USER_INFO)
+
+    if (userInfo.loading) {
+        return <div>loading...</div>
+    }
+
     const books = props.books.filter(book => book.genres.includes(userInfo.data.me.favoriteGenre))
 
     if (!props.show) {
         return null
     }
-
-    console.log('user info: ', userInfo.data.me.favoriteGenre)
 
     return (
         <div>
