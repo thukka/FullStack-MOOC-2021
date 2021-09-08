@@ -1,17 +1,34 @@
-
-import React from 'react'
+import React, { useState } from 'react'
 
 const Books = (props) => {
+  const [books, setBooks] = useState(props.books)
+
   if (!props.show) {
     return null
   }
 
-  const books = props.books
-  console.log('books: ', books)
+  let genres = []
+  
+  props.books.forEach(book => {
+    book.genres.forEach(g => {
+      if (!genres.includes(g)) {
+        genres = genres.concat(g)
+      }
+    })
+  })
+
+  const filterBooks = (filter) => {
+    if (filter === '') {
+      setBooks(props.books)
+    } else {
+      let filteredList = props.books.filter(book => book.genres.includes(filter))
+      setBooks(filteredList)
+    }
+  }
+
   return (
     <div>
       <h2>books</h2>
-
       <table>
         <tbody>
           <tr>
@@ -32,6 +49,12 @@ const Books = (props) => {
           )}
         </tbody>
       </table>
+      <div>
+        {genres.map(g =>
+          <button key={g} onClick={() => filterBooks(g)}>{g}</button>
+        )}
+        <button onClick={() => filterBooks('')}>all genres</button>
+      </div>
     </div>
   )
 }
