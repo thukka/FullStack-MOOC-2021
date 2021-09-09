@@ -4,8 +4,8 @@ import Books from './components/Books'
 import NewBook from './components/NewBook'
 import Recommended from './components/Recommended'
 
-import { ALL_AUTHORS, ALL_BOOKS, USER_INFO } from './queries'
-import { useApolloClient, useQuery } from '@apollo/client'
+import { ALL_AUTHORS, ALL_BOOKS, USER_INFO, BOOK_ADDED } from './queries'
+import { useApolloClient, useQuery, useSubscription } from '@apollo/client'
 import LoginForm from './components/LoginForm'
 
 
@@ -14,7 +14,7 @@ const App = () => {
   const [token, setToken] = useState(null)
   const authors = useQuery(ALL_AUTHORS)
   const books = useQuery(ALL_BOOKS)
-  const { data } = useQuery(USER_INFO, { pollInterval: 1000 })
+  const user = useQuery(USER_INFO, { pollInterval: 1000 })
   const client = useApolloClient()
 
   useEffect(() => {
@@ -24,7 +24,13 @@ const App = () => {
     }
   }, [])
 
-  if (authors.loading || books.loading || !data) {
+  useSubscription(BOOK_ADDED, {
+    onSubscriptionData: ({ subscriptionData }) => {
+      window.alert(`new book added! ${subscriptionData.data.bookAdded.title}`)
+    }
+  })
+
+  if (authors.loading || books.loading || !user.data) {
     return (
       <div>loading...</div>
     )
@@ -36,7 +42,6 @@ const App = () => {
     client.resetStore()
     setPage('authors')
   }
-
 
   return (
     <div>
@@ -70,8 +75,8 @@ const App = () => {
 
       <Recommended
         show={page === 'recommended'}
-        user={data.me ? data.me : ''}
         books={books.data.allBooks}
+        user={user}
       />
 
 
