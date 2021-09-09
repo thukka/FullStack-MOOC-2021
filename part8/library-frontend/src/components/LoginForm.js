@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react"
-import { LOGIN } from '../queries'
+import { LOGIN, USER_INFO } from '../queries'
 import { useMutation } from '@apollo/client'
 
 const LoginForm = (props) => {
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
-    const [loginUser, result] = useMutation(LOGIN)
+    const [loginUser, result] = useMutation(LOGIN, {
+        refetchQueries: [{ query: USER_INFO }],
+        onError: (error) => {
+            console.log('ERROR LOGIN: ', error)
+        }
+    })
 
     useEffect(() => {
         if (result.data) {
@@ -15,9 +20,9 @@ const LoginForm = (props) => {
         }
     }, [result.data]) //eslint-disable-line
 
-    const login = async (event) => {
+    const login = (event) => {
         event.preventDefault()
-        await loginUser({ variables: { username, password } })
+        loginUser({ variables: { username, password } })
         props.setPage('authors')
     }
 

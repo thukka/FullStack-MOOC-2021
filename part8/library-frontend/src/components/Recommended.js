@@ -1,25 +1,29 @@
-import React from 'react'
-import { useQuery } from '@apollo/client'
-import { USER_INFO } from '../queries'
+import React, { useEffect, useState } from 'react'
+import { useLazyQuery } from '@apollo/client'
+import { ALL_BOOKS } from '../queries'
 
 const Recommended = (props) => {
 
-    const userInfo = useQuery(USER_INFO)
+    const [userBooks, result] = useLazyQuery(ALL_BOOKS)
+    const [books, setBooks] = useState(props.books)
+    const user = props.user
 
-    if (userInfo.loading) {
-        return <div>loading...</div>
-    }
+    useEffect(() => {
+        userBooks({ variables: { genre: user.favoriteGenre } })
+        if (result.data) {
+            console.log('result data: ', result.data)
+            setBooks(result.data.allBooks)
+        }
+    }, [result.data]) //eslint-disable-line
 
-    const books = props.books.filter(book => book.genres.includes(userInfo.data.me.favoriteGenre))
-
-    if (!props.show) {
+    if (!props.show || !user) {
         return null
     }
-
+    console.log('user!: ', user)
     return (
         <div>
             <h2>recommendations</h2>
-            <p>books in your favorite genre <strong>{userInfo.data.me.favoriteGenre}</strong></p>
+            <p>books in your favorite genre <strong>{user.favoriteGenre}</strong></p>
             <div>
                 <h2>books</h2>
                 <table>
