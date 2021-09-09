@@ -24,9 +24,26 @@ const App = () => {
     }
   }, [])
 
+  const updateCacheWith = (addedBook) => {
+    const includedIn = (set, object) => set.map(p => p.id).includes(object.id)
+    console.log('includedIn: ', includedIn)
+
+    const dataInStore = client.readQuery({ query: ALL_BOOKS })
+    console.log('dataInStore: ', dataInStore)
+    if (!includedIn(dataInStore.allBooks, addedBook)) {
+      client.writeQuery({
+        query: ALL_BOOKS,
+        data: { allBooks: dataInStore.allBooks.concat(addedBook)}
+      })
+    }
+  }
+
+
   useSubscription(BOOK_ADDED, {
     onSubscriptionData: ({ subscriptionData }) => {
-      window.alert(`new book added! ${subscriptionData.data.bookAdded.title}`)
+      const addedBook = subscriptionData.data.bookAdded.title
+      window.alert(`new book added! ${addedBook}`)
+      updateCacheWith(addedBook)
     }
   })
 
@@ -42,6 +59,8 @@ const App = () => {
     client.resetStore()
     setPage('authors')
   }
+
+  console.log('books: ', books.data.allBooks)
 
   return (
     <div>
