@@ -16,4 +16,6 @@ Part 6 - OK
 
 Part 7 - OK
 
-Part 8 - WIP
+Part 8 - OK
+
+Part 9 - WIP
