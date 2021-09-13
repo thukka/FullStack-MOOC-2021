@@ -9,6 +9,31 @@ interface Result {
     ratingDescription: string
 };
 
+interface InputValues {
+    days: Array<number>,
+    target: number,
+}
+
+const parseArgs = (arguments: any): InputValues => {
+    let target = Number(arguments[2])
+    if (isNaN(target)) throw new Error('Target was not a number')
+
+    let days = arguments.slice(3)
+    days = days.map((n: any) => {
+
+        if (isNaN(n)) {
+            throw new Error('One of the inputs was not a number')
+        }
+
+        return Number(n)
+    })
+
+    return {
+        days: days,
+        target: target,
+    }
+}
+
 const calculateExercises = (arr: Array<number>, target: number): Result => {
     const numberOfDaysTotal = arr.length;
     let numberOfDaysTrained = 0;
@@ -49,4 +74,9 @@ const calculateExercises = (arr: Array<number>, target: number): Result => {
     return resultObject;
 };
 
-console.log(calculateExercises([3, 0, 2, 4.5, 1, 3, 1], 2));
+try {
+    const { days, target } = parseArgs(process.argv)
+    console.log(calculateExercises(days, target))
+} catch (e) {
+    console.log('Error:', e.message)
+}
