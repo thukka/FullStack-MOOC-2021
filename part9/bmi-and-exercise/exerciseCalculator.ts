@@ -14,11 +14,11 @@ interface InputValues {
     target: number,
 }
 
-const parseArgs = (arguments: any): InputValues => {
-    let target = Number(arguments[2])
+const parseArgs = (args: any): InputValues => {
+    let target = Number(args[2])
     if (isNaN(target)) throw new Error('Target was not a number')
 
-    let days = arguments.slice(3)
+    let days = args.slice(3)
     days = days.map((n: any) => {
 
         if (isNaN(n)) {
@@ -80,3 +80,5 @@ try {
 } catch (e) {
     console.log('Error:', e.message)
 }
+
+export { parseArgs, calculateExercises }
