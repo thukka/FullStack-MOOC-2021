@@ -7,34 +7,33 @@ interface Result {
     success: boolean,
     rating: number,
     ratingDescription: string
-};
+}
 
 interface InputValues {
     days: Array<number>,
     target: number,
 }
 
-const parseArgs = (args: any): InputValues => {
-    let target = Number(args[2])
-    if (isNaN(target)) throw new Error('Target was not a number')
+const parseArgs = (args: Array<string>): InputValues => {
+    const target = Number(args[2]);
+    if (isNaN(target)) throw new Error('Target was not a number');
 
-    let days = args.slice(3)
-    days = days.map((n: any) => {
+    const days: Array<number> = args.slice(3).map((n) => {
 
-        if (isNaN(n)) {
-            throw new Error('One of the inputs was not a number')
+        if (isNaN(Number(n))) {
+            throw new Error('One of the inputs was not a number');
         }
 
-        return Number(n)
-    })
+        return Number(n);
+    });
 
     return {
         days: days,
         target: target,
-    }
-}
+    };
+};
 
-const calculateExercises = (arr: Array<number>, target: number): Result => {
+export const calculateExercises = (arr: Array<number>, target: number): Result => {
     const numberOfDaysTotal = arr.length;
     let numberOfDaysTrained = 0;
     let totalHours = 0;
@@ -44,8 +43,8 @@ const calculateExercises = (arr: Array<number>, target: number): Result => {
         totalHours += day;
     });
 
-    let average = totalHours / numberOfDaysTotal;
-    let targetMet = average >= target ? true : false;
+    const average = totalHours / numberOfDaysTotal;
+    const targetMet = average >= target ? true : false;
     let rating = 0;
     let ratingDescription = '';
 
@@ -75,10 +74,8 @@ const calculateExercises = (arr: Array<number>, target: number): Result => {
 };
 
 try {
-    const { days, target } = parseArgs(process.argv)
-    console.log(calculateExercises(days, target))
+    const { days, target } = parseArgs(process.argv);
+    console.log(calculateExercises(days, target));
 } catch (e) {
-    console.log('Error:', e.message)
+    console.log('Error:', e);
 }
-
-export { parseArgs, calculateExercises }
