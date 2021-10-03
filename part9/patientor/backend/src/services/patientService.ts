@@ -19,7 +19,6 @@ const getPatients = (): Array<Patient> => {
 const addPatient = (patient: NewPatient): Patient => {
     const newId: string = uuid();
     const newPatient = { ...patient, id: newId};
-    console.log('newPatient: ', newPatient);
     patientData.push(newPatient);
     return newPatient;
 };
