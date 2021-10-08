@@ -8,7 +8,7 @@ const getSensitivePatientData = (): SensitivePatientData[] => {
         name,
         dateOfBirth,
         gender,
-        occupation
+        occupation,
     }));
 };
 
@@ -16,9 +16,15 @@ const getPatients = (): Array<Patient> => {
     return patientData;
 };
 
+const getPatientInfo = (id: string): Patient | undefined => {
+    const findPatient = patientData.find(p => p.id === id);
+    console.log('find patient: ', findPatient);
+    return findPatient;
+};
+
 const addPatient = (patient: NewPatient): Patient => {
     const newId: string = uuid();
-    const newPatient = { ...patient, id: newId};
+    const newPatient = { ...patient, id: newId, entries: []};
     patientData.push(newPatient);
     return newPatient;
 };
@@ -26,5 +32,6 @@ const addPatient = (patient: NewPatient): Patient => {
 export default {
     getPatients,
     getSensitivePatientData,
-    addPatient
+    addPatient,
+    getPatientInfo
 };

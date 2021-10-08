@@ -23,7 +23,8 @@ const parseGender = (gender: unknown): Gender => {
     return gender;
 };
 
-type Fields = { name: unknown, occupation: unknown, gender: unknown, ssn: unknown, dateOfBirth: unknown };
+
+type Fields = { name: unknown, occupation: unknown, gender: unknown, ssn: unknown, dateOfBirth: unknown, entries: unknown };
 
 const toNewPatient = ({ name, occupation, gender, ssn, dateOfBirth }: Fields): NewPatient => {
 
@@ -32,8 +33,7 @@ const toNewPatient = ({ name, occupation, gender, ssn, dateOfBirth }: Fields): N
         occupation: parseString(occupation),
         gender: parseGender(gender),
         ssn: parseString(ssn),
-        dateOfBirth: parseString(dateOfBirth)
-
+        dateOfBirth: parseString(dateOfBirth),
     };
 
     return newPatient;

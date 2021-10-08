@@ -3,13 +3,18 @@ import { Patient } from "../types";
 
 export type Action =
   | {
-      type: "SET_PATIENT_LIST";
-      payload: Patient[];
-    }
+    type: "SET_PATIENT_LIST";
+    payload: Patient[];
+  }
   | {
-      type: "ADD_PATIENT";
-      payload: Patient;
-    };
+    type: "ADD_PATIENT";
+    payload: Patient;
+  }
+  | {
+    type: "SET_PATIENT_VIEW";
+    payload: Patient;
+  }
+  ;
 
 export const reducer = (state: State, action: Action): State => {
   switch (action.type) {
@@ -30,6 +35,20 @@ export const reducer = (state: State, action: Action): State => {
         patients: {
           ...state.patients,
           [action.payload.id]: action.payload
+        }
+      };
+    case "SET_PATIENT_VIEW":
+      return {
+        ...state,
+        patient: {
+          id: action.payload.id,
+          name: action.payload.name,
+          occupation: action.payload.occupation,
+          gender: action.payload.gender,
+          ssn: action.payload.ssn ? action.payload.ssn : '',
+          dateOfBirth: action.payload.dateOfBirth ? action.payload.dateOfBirth : '',
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          entries: action.payload.entries ? action.payload.entries : [],
         }
       };
     default:
