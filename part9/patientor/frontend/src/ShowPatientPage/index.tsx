@@ -40,6 +40,10 @@ const ShowPatient = () => {
         );
     }
 
+    console.log('patient: ', state.patient);
+    const patientEntries = state.patient.entries ? state.patient.entries : [];
+    console.log('patientEntries: ', patientEntries);
+
     return (
         <div>
             <h1>{state.patient.name} {SetGenderIcon()} </h1>
@@ -47,6 +51,22 @@ const ShowPatient = () => {
                 {state.patient.ssn} <br />
                 {state.patient.occupation}
             </p>
+            <div>
+                <h3>entries</h3>
+                {
+                    patientEntries.map(e => {
+
+                        return <>
+                            {e.date} {e.description} <br />
+                            {e.diagnosisCodes ?
+                                <ul>
+                                    {e.diagnosisCodes.map(c => <li key={c}>{c}</li>)}
+                                </ul>
+                                : null}
+                        </>;
+                    })
+                }
+            </div>
         </div>
     );
 };
