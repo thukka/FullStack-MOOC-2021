@@ -5,7 +5,7 @@ import { Button, Divider, Header, Container } from "semantic-ui-react";
 
 import { apiBaseUrl } from "./constants";
 import { useStateValue, setPatientList } from "./state";
-import { Patient } from "./types";
+import { Diagnosis, Patient } from "./types";
 
 import PatientListPage from "./PatientListPage";
 import ShowPatient from "./ShowPatientPage";
@@ -25,7 +25,18 @@ const App = () => {
         console.error(e);
       }
     };
+
+    const fetchDiagnosesList = async () => {
+      try {
+        const { data: diagnosesListFromApi } = await axios.get<Diagnosis[]>(`${apiBaseUrl}/diagnoses`);
+        dispatch({ type: 'SET_DIAGNOSES_LIST', payload: diagnosesListFromApi });
+      } catch (e) {
+        console.error(e);
+      }
+    };
+    
     void fetchPatientList();
+    void fetchDiagnosesList();
   }, [dispatch]);
 
   return (

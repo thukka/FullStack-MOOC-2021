@@ -1,5 +1,5 @@
 import { State } from "./state";
-import { Patient } from "../types";
+import { Patient, Diagnosis } from "../types";
 
 export type Action =
   | {
@@ -13,6 +13,10 @@ export type Action =
   | {
     type: "SET_PATIENT_VIEW";
     payload: Patient;
+  }
+  | {
+    type: 'SET_DIAGNOSES_LIST';
+    payload: Diagnosis[];
   }
   ;
 
@@ -50,6 +54,12 @@ export const reducer = (state: State, action: Action): State => {
           // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           entries: action.payload.entries ? action.payload.entries : [],
         }
+      };
+    case "SET_DIAGNOSES_LIST":
+      return {
+        ...state, diagnoses:
+          [...action.payload]
+
       };
     default:
       return state;

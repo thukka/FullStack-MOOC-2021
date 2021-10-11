@@ -40,9 +40,12 @@ const ShowPatient = () => {
         );
     }
 
-    console.log('patient: ', state.patient);
     const patientEntries = state.patient.entries ? state.patient.entries : [];
-    console.log('patientEntries: ', patientEntries);
+
+    const findDiagnosisName = (code: string): string | undefined => {
+        const found = state.diagnoses.find(c => c.code === code);
+        return found ? found.name : '';
+    };
 
     return (
         <div>
@@ -60,7 +63,7 @@ const ShowPatient = () => {
                             {e.date} {e.description} <br />
                             {e.diagnosisCodes ?
                                 <ul>
-                                    {e.diagnosisCodes.map(c => <li key={c}>{c}</li>)}
+                                    {e.diagnosisCodes.map(c => <li key={c}> {c} {findDiagnosisName(c)} </li>)}
                                 </ul>
                                 : null}
                         </>;
