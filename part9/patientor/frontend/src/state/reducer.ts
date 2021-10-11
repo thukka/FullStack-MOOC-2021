@@ -55,3 +55,25 @@ export const reducer = (state: State, action: Action): State => {
       return state;
   }
 };
+
+// action creators
+export const setPatientList = (patientListFromApi: Patient[]): Action => {
+  return {
+    type: 'SET_PATIENT_LIST',
+    payload: patientListFromApi
+  };
+};
+
+export const setPatientView = (patientFromApi: Patient): Action => {
+  return {
+    type: 'SET_PATIENT_VIEW',
+    payload: patientFromApi
+  };
+};
+
+export const addPatient = (patientFromApi: Patient): Action => {
+  return {
+    type: 'ADD_PATIENT',
+    payload: patientFromApi
+  };
+};

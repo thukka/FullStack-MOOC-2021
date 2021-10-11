@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import axios from 'axios';
 import { Patient } from '../types';
 import { useParams } from 'react-router';
-import { useStateValue } from '../state/';
+import { useStateValue, setPatientView } from '../state/';
 import { Icon } from 'semantic-ui-react';
 
 const ShowPatient = () => {
@@ -14,7 +14,7 @@ const ShowPatient = () => {
         const fetchPatientData = async () => {
             try {
                 const { data: patient } = await axios.get<Patient>(`http://localhost:3001/api/patients/${id}`);
-                dispatch({ type: 'SET_PATIENT_VIEW', payload: patient });
+                dispatch(setPatientView(patient));
             } catch (e) {
                 console.error(e);
             }
