@@ -59,7 +59,6 @@ export const reducer = (state: State, action: Action): State => {
       return {
         ...state, diagnoses:
           [...action.payload]
-
       };
     default:
       return state;
@@ -85,5 +84,12 @@ export const addPatient = (patientFromApi: Patient): Action => {
   return {
     type: 'ADD_PATIENT',
     payload: patientFromApi
+  };
+};
+
+export const setDiagnoses = (diagnosesListFromApi: Diagnosis[]): Action => {
+  return {
+    type: 'SET_DIAGNOSES_LIST',
+    payload: diagnosesListFromApi
   };
 };
