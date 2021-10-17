@@ -1,4 +1,4 @@
-import { Diagnosis, Entry, BaseEntry, HealthCheckRating } from '../types';
+import { Diagnosis, Entry, BaseEntry, HealthCheckRating, OccupationalHealthcareEntry } from '../types';
 import diagnoses from '../../data/diagnoses.json';
 
 //string
@@ -61,7 +61,6 @@ const toNewEntry = (object: any): Entry => {
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const type = object.type;
-    console.log('object: ', object);
 
     if (!object || !isType(type)) {
         throw new Error('No object or invalid object type!');
@@ -86,22 +85,29 @@ const toNewEntry = (object: any): Entry => {
                 healthCheckRating: parseHealthCheckRating(object.healthCheckRating),
             };
         case 'OccupationalHealthcare':
-            return {
+            let occupationalObject: OccupationalHealthcareEntry = {
                 ...entry,
                 type: 'OccupationalHealthcare',
-                employerName: parseString(object.employerName),
-                sickLeave: {
-                    startDate: parseDate(object.sickLeave.startDate),
-                    endDate: parseDate(object.sickLeave.endDate)
-                }
+                employerName: parseString(object.employerName)
             };
+
+            if (object.sickLeaveStartDate && object.sickLeaveEndDate) {
+                occupationalObject = {
+                    ...occupationalObject,
+                    sickLeave: {
+                        startDate: parseDate(object.sickLeaveStartDate),
+                        endDate: parseDate(object.sickLeaveEndDate)
+                    }
+                };
+            }
+            return occupationalObject;
         case 'Hospital':
             return {
                 ...entry,
                 type: 'Hospital',
                 discharge: {
-                    date: parseDate(object.discharge.date),
-                    criteria: parseString(object.discharge.criteria)
+                    date: parseDate(object.dischargeDate),
+                    criteria: parseString(object.dischargeCriteria)
                 }
             };
         default:

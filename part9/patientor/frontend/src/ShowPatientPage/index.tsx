@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Entry, Patient, HospitalEntry, OccupationalHealthcareEntry, HealthCheckEntry } from '../types';
+import { Entry, Patient, HospitalEntry, OccupationalHealthcareEntry, HealthCheckEntry, BaseEntry } from '../types';
 import { useParams } from 'react-router';
-import { useStateValue, setPatientView } from '../state/';
-import { Icon } from 'semantic-ui-react';
+import { useStateValue, setPatientView, addPatient } from '../state/';
+import { Button, Icon } from 'semantic-ui-react';
+import AddEntryModal, { AddOccupationalModal } from './AddEntryIndex';
+import { AddHospitalModal } from './AddEntryIndex';
 
 const borderStyle = {
     padding: '10px',
@@ -24,7 +26,6 @@ const HospitalEntryComponent = ({ props }: { props: HospitalEntry }) => {
     </div>;
 };
 
-
 const OccupationalHealthcareComponent = ({ props }: { props: OccupationalHealthcareEntry }) => {
     return (
         <div style={borderStyle}>
@@ -35,7 +36,6 @@ const OccupationalHealthcareComponent = ({ props }: { props: OccupationalHealthc
         </div>
     );
 };
-
 
 const HealthCheckEntryComponent = ({ props }: { props: HealthCheckEntry }) => {
     let rateVisit;
@@ -61,11 +61,9 @@ const HealthCheckEntryComponent = ({ props }: { props: HealthCheckEntry }) => {
 
 const mapDiagnosesToComponent = (props: Entry) => {
     return (
-        <>
-            <ul>
-                {props.diagnosisCodes ? props.diagnosisCodes.map((c: string) => <li key={c}> {c} {findDiagnosisName(c)}</li>) : null}
-            </ul>
-        </>
+        <ul>
+            {props.diagnosisCodes ? props.diagnosisCodes.map((c: string, i: number) => <li key={i}> {c} {findDiagnosisName(c)}</li>) : null}
+        </ul>
     );
 };
 
@@ -80,6 +78,32 @@ const ShowPatient = () => {
 
     const { id } = useParams<{ id: string }>();
     const [state, dispatch] = useStateValue();
+    const [modalOpen, setModalOpen] = useState<boolean>(false);
+    const [error, setError] = useState<string | undefined>();
+    const [modal, setModal] = useState('HealthCheck');
+
+    // entry modal functions
+    const openModal = (): void => setModalOpen(true);
+    const closeModal = (): void => {
+        setModalOpen(false);
+        setError(undefined);
+    };
+
+    const submitNewEntry = async (values: BaseEntry) => {
+        try {
+            const { data: newEntry } = await axios.post<Patient>(
+                `http://localhost:3001/api/patients/${id}/entries`,
+                values
+            );
+            console.log('new entry: ', newEntry);
+            dispatch(addPatient(newEntry));
+            dispatch(setPatientView(newEntry));
+            closeModal();
+        } catch (e) {
+            setError(e.response?.data || 'Unknown error');
+        }
+    };
+
 
     useEffect(() => {
         const fetchPatientData = async () => {
@@ -114,11 +138,11 @@ const ShowPatient = () => {
     const EntryDetails = (entry: Entry) => {
         switch (entry.type) {
             case 'Hospital':
-                return <HospitalEntryComponent props={entry} />;
+                return <HospitalEntryComponent key={entry.id} props={entry} />;
             case 'OccupationalHealthcare':
-                return <OccupationalHealthcareComponent props={entry} />;
+                return <OccupationalHealthcareComponent key={entry.id} props={entry} />;
             case 'HealthCheck':
-                return <HealthCheckEntryComponent props={entry} />;
+                return <HealthCheckEntryComponent key={entry.id} props={entry} />;
             default:
                 return assertNever(entry);
         }
@@ -130,6 +154,31 @@ const ShowPatient = () => {
         );
     }
 
+    const RenderModal = () => {
+        if (modal === 'Hospital') {
+            return <AddHospitalModal
+                modalOpen={modalOpen}
+                onClose={closeModal}
+                onSubmit={submitNewEntry}
+                error={error}
+            />;
+        } else if (modal === 'HealthCheck') {
+            return <AddEntryModal
+                modalOpen={modalOpen}
+                onClose={closeModal}
+                onSubmit={submitNewEntry}
+                error={error}
+            />;
+        } else {
+            return <AddOccupationalModal
+            modalOpen={modalOpen}
+            onClose={closeModal}
+            onSubmit={submitNewEntry}
+            error={error}
+        />;
+        }
+    };
+
     return (
         <div>
             <h1>{state.patient.name} {SetGenderIcon()} </h1>
@@ -140,6 +189,12 @@ const ShowPatient = () => {
             <div>
                 <h3>entries</h3>
                 {patientEntries.map(e => EntryDetails(e))}
+                <strong>Current entry type: {modal}</strong> <br />
+                <Button onClick={() => setModal('HealthCheck')}>Entry type: HealthCheck</Button>
+                <Button onClick={() => setModal('Hospital')}>Entry type: Hospital</Button>
+                <Button onClick={() => setModal('OccupationalHealthcare')}>Entry type: OccupationalHealthcare</Button>
+                {RenderModal()}
+                <Button onClick={() => openModal()}>Add new entry</Button>
             </div>
         </div>
     );

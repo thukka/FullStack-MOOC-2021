@@ -32,9 +32,7 @@ router.post('/', (req, res) => {
 router.post('/:id/entries', (req, res) => {
     try {
         const patientId = req.params.id;
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
         const payload = toNewEntry(req.body);
-        console.log('body:', payload);
         const addEntry = patientService.addNewEntry(patientId, payload);
         res.send(addEntry);
         

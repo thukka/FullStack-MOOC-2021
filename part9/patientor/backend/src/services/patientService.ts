@@ -29,10 +29,7 @@ const addPatient = (patient: NewPatient): Patient => {
 };
 
 const addNewEntry = (patientId: string, entryData: Entry): Patient | undefined => {
-    console.log('patientId: ', patientId);
-    console.log('entryData: ', entryData);
     const patient = getPatientInfo(patientId);
-    console.log('patient found?: ', patient);
 
     if (!patient) {
         throw new Error('patient not found');

@@ -4,7 +4,7 @@ export interface Diagnosis {
   latin?: string;
 }
 
-interface BaseEntry {
+export interface BaseEntry {
   id: string;
   description: string;
   date: string;
@@ -50,6 +50,12 @@ export enum Gender {
   Male = "male",
   Female = "female",
   Other = "other"
+}
+
+export enum HealthTypes {
+  HealthCheck = 'HealthCheck',
+  OccupationalHealthcare = 'OccupationalHealthcare',
+  Hospital = 'Hospital'
 }
 
 export interface Patient {
