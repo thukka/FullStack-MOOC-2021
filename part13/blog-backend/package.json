@@ -1,0 +1,14 @@
+{
+  "name": "blog-backend",
+  "version": "1.0.0",
+  "description": "Backend for part13 of full stack mooc",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon index.js"
+  },
+  "author": "Toni Hukka",
+  "license": "ISC",
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
