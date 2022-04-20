@@ -15,6 +15,10 @@ User.init({
     username: {
         type: DataTypes.STRING,
         allowNull: false
+    },
+    passwordHash: {
+        type: DataTypes.STRING,
+        allowNull: false,
     }
 }, {
     sequelize,
