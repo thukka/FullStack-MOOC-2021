@@ -7,7 +7,7 @@ const findBlog = async (req, res, next) => {
     next()
 }
 
-router.get('/', async (req, res) => {
+router.get('/', async (_req, res) => {
     const blogs = await Blog.findAll({
         attributes: {
             exclude: ['userId']
@@ -31,12 +31,16 @@ router.post('/', tokenExtractor, async (req, res, next) => {
     }
 })
 
-router.delete('/:id', findBlog, async (req, res, next) => {
-    try {
-        await req.blog.destroy()
-        return res.status(200).end()
-    } catch (err) {
-        next(err)
+router.delete('/:id', [findBlog, tokenExtractor], async (req, res, next) => {
+    if (req.decodedToken.id === req.blog.userId) {
+        try {
+            await req.blog.destroy()
+            return res.status(200).end()
+        } catch (err) {
+            next(err)
+        }
+    } else {
+        return res.status(400).json({ error: 'not authorized' })
     }
 })
 
