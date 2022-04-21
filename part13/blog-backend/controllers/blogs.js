@@ -1,5 +1,6 @@
 const router = require('express').Router()
-const { Blog } = require('../models/')
+const { Blog, User } = require('../models/')
+const tokenExtractor = require('./utils/tokenExtractor')
 
 const findBlog = async (req, res, next) => {
     req.blog = await Blog.findByPk(req.params.id)
@@ -7,16 +8,26 @@ const findBlog = async (req, res, next) => {
 }
 
 router.get('/', async (req, res) => {
-    const blogs = await Blog.findAll()
+    const blogs = await Blog.findAll({
+        attributes: {
+            exclude: ['userId']
+        },
+        include: {
+            model: User,
+            attributes: ['name']
+        }
+    })
     res.json(blogs)
 })
 
-router.post('/', async (req, res, next) => {
-    try {
-        const blog = await Blog.create(req.body)
-        return res.json(blog)
-    } catch (err) {
-        next(err)
+router.post('/', tokenExtractor, async (req, res, next) => {
+    if (req.decodedToken) {
+        try {
+            const blog = await Blog.create({ ...req.body, userId: req.decodedToken.id })
+            return res.json(blog)
+        } catch (err) {
+            next(err)
+        }
     }
 })
 
@@ -40,9 +51,7 @@ router.put('/:id', findBlog, async (req, res, next) => {
 })
 
 const errorHandler = (err, _req, res, next) => {
-    console.error('errorHandler: ', err)
-    console.error('errorHandler errname:', err.name)
-    
+
     switch (err.name) {
         case 'TypeError': {
             return res.status(400).send({ error: 'Can\'t find blog' })
