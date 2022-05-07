@@ -1,5 +1,5 @@
 const router = require('express').Router()
-const { User, Blog } = require('../models/')
+const { User, Blog, ReadingList } = require('../models/')
 const bcrypt = require('bcrypt')
 const tokenExtractor = require('./utils/tokenExtractor')
 
@@ -13,6 +13,21 @@ router.get('/', async (_req, res) => {
         }
     })
     res.json(users)
+})
+
+router.get('/:id', async (req, res) => {
+    const user = await User.findOne({
+        where: { id: req.params.id },
+        attributes: ['username', 'name'],
+        include: {
+            model: Blog,
+            as: 'reading',
+            attributes: ['id', 'url', 'author', 'title', 'year', 'likes',],
+            through: { attributes: [] }
+        }
+    })
+    
+    res.json(user)
 })
 
 router.post('/', async (req, res) => {
@@ -34,7 +49,6 @@ router.post('/', async (req, res) => {
 })
 
 router.put('/:username', tokenExtractor, async (req, res) => {
-    console.log('--- decoded token: ', req.decodedToken, ' ---')
     const user = await User.findOne({
         where: {
             username: req.params.username
