@@ -2,7 +2,7 @@ const router = require('express').Router()
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
 
-const { User } = require('../models/')
+const { User, ActiveSession } = require('../models/')
 const { SECRET } = require('../util/config')
 
 router.post('/', async (req, res) => {
@@ -28,8 +28,32 @@ router.post('/', async (req, res) => {
     }
 
     const token = jwt.sign(userForToken, SECRET)
-    console.log('token is: ', token)
+
+    const userSession = await ActiveSession.findOne({ where: { userId: user.id }})
+
+    if (userSession) {
+        userSession.token = token
+        await userSession.save()
+    } else {
+        await ActiveSession.create({ 
+            userId: user.id,
+            username: user.username,
+            token
+        })
+    }
+
     res.status(200).send({ token, username: user.username, name: user.name })
+})
+
+router.delete('/:id', async (req, res) => {
+    try {
+        const userSession = await ActiveSession.findOne({ where: { userId: req.params.id }})
+        await userSession.destroy();
+        res.status(200).json({ msg: 'session deleted' })
+    } catch (err) {
+        res.status(400).json({ error: err.message })        
+    }
+    
 })
 
 module.exports = router
